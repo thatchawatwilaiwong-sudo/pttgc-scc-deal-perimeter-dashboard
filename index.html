@@ -1,0 +1,1297 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PTTGC x SCC/SCGC Deal Perimeter Dashboard</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #64748b;
+      --line: #d8e1ea;
+      --panel: #f8fafc;
+      --navy: #0b2545;
+      --ptt: #0f766e;
+      --ptt-soft: #ccfbf1;
+      --scc: #b45309;
+      --scc-soft: #fef3c7;
+      --jv: #6d28d9;
+      --jv-soft: #ede9fe;
+      --green: #15803d;
+      --green-soft: #dcfce7;
+      --red: #b91c1c;
+      --red-soft: #fee2e2;
+      --blue: #155e75;
+      --blue-soft: #e0f2fe;
+      --white: #ffffff;
+      --shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #eef3f7;
+    }
+
+    button, select { font: inherit; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 272px 1fr;
+    }
+
+    aside {
+      background: var(--navy);
+      color: var(--white);
+      padding: 24px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .brand {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      color: #9fb3c8;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-size: 22px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav button {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: #dbeafe;
+      padding: 11px 12px;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    .nav button.active {
+      background: var(--white);
+      color: var(--navy);
+      border-color: var(--white);
+    }
+
+    .legend {
+      margin-top: 28px;
+      display: grid;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #e2e8f0;
+    }
+
+    .credit {
+      position: fixed;
+      left: 18px;
+      bottom: 14px;
+      color: #cbd5e1;
+      font-size: 11px;
+      font-weight: 700;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+    }
+
+    main {
+      padding: 26px;
+      display: grid;
+      gap: 20px;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr minmax(280px, 420px);
+      gap: 18px;
+      align-items: end;
+    }
+
+    .title-block {
+      display: grid;
+      gap: 7px;
+    }
+
+    .title-block h2 {
+      font-size: 28px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .title-block p {
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 900px;
+      line-height: 1.45;
+    }
+
+    .selector {
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      border-radius: 8px;
+      display: grid;
+      gap: 7px;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px 12px;
+      background: var(--white);
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .section { display: none; }
+    .section.active { display: grid; gap: 18px; }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      min-height: 112px;
+    }
+
+    .metric {
+      display: grid;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: var(--accent, var(--navy));
+    }
+
+    .metric .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding-left: 10px;
+    }
+
+    .metric .value {
+      font-size: 27px;
+      font-weight: 850;
+      color: var(--accent, var(--ink));
+      padding-left: 10px;
+      line-height: 1.05;
+    }
+
+    .metric .sub {
+      color: var(--muted);
+      font-size: 12px;
+      padding-left: 10px;
+      line-height: 1.35;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .panel-title h3 {
+      font-size: 17px;
+      line-height: 1.2;
+    }
+
+    .panel-title span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .bars {
+      display: grid;
+      gap: 12px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 138px 1fr 86px;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .track {
+      height: 16px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--accent, var(--blue));
+      min-width: 2px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th {
+      background: var(--navy);
+      color: var(--white);
+      text-align: left;
+      padding: 10px;
+      border: 1px solid #1e3a5f;
+      font-size: 11px;
+    }
+
+    td {
+      padding: 10px;
+      border: 1px solid var(--line);
+      vertical-align: top;
+      line-height: 1.35;
+      background: var(--white);
+    }
+
+    tbody tr:nth-child(even) td { background: var(--panel); }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .tag.ptt { color: var(--ptt); background: var(--ptt-soft); }
+    .tag.scc { color: var(--scc); background: var(--scc-soft); }
+    .tag.jv { color: var(--jv); background: var(--jv-soft); }
+    .tag.risk { color: var(--red); background: var(--red-soft); }
+    .tag.green { color: var(--green); background: var(--green-soft); }
+
+    .opportunity-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .opportunity {
+      display: grid;
+      gap: 10px;
+      min-height: 236px;
+    }
+
+    .opportunity header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .opportunity h3 {
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .opportunity p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.42;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .mini-list li {
+      border-left: 3px solid var(--line);
+      padding-left: 9px;
+    }
+
+    .mini-list li.risk-line { border-left-color: var(--red); }
+    .mini-list li.product-line { border-left-color: var(--green); }
+
+    .split-bars {
+      display: grid;
+      gap: 10px;
+    }
+
+    .stacked {
+      height: 20px;
+      display: flex;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e2e8f0;
+      border: 1px solid var(--line);
+    }
+
+    .stacked span:first-child { background: var(--ptt); }
+    .stacked span:last-child { background: var(--scc); }
+
+    .value-step-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .value-chain {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(132px, 1fr));
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .stage {
+      min-width: 132px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto auto 1fr 1fr;
+    }
+
+    .stage h3 {
+      background: var(--navy);
+      color: var(--white);
+      font-size: 12px;
+      padding: 9px;
+      text-align: center;
+    }
+
+    .stage .products {
+      padding: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.32;
+      min-height: 88px;
+      text-align: center;
+    }
+
+    .footprint {
+      margin: 8px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid;
+      min-height: 92px;
+      display: grid;
+      gap: 4px;
+      align-content: center;
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .footprint strong { font-size: 12px; }
+    .footprint.ptt { background: var(--ptt-soft); border-color: var(--ptt); }
+    .footprint.scc { background: var(--scc-soft); border-color: var(--scc); }
+    .footprint.jv-highlight {
+      background: var(--jv-soft);
+      border-color: var(--jv);
+      box-shadow: inset 0 0 0 1px var(--jv);
+    }
+
+    .footprint.jv-highlight strong {
+      color: var(--jv);
+    }
+
+    .heatmap {
+      display: grid;
+      gap: 8px;
+    }
+
+    .heat-row {
+      display: grid;
+      grid-template-columns: 180px repeat(5, 1fr) 1.7fr;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .heat-cell {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 9px;
+      background: var(--white);
+      font-size: 12px;
+      font-weight: 700;
+      min-height: 46px;
+      display: grid;
+      align-items: center;
+    }
+
+    .score-1 { background: #dcfce7; color: #14532d; }
+    .score-2 { background: #ecfccb; color: #3f6212; }
+    .score-3 { background: #fef3c7; color: #78350f; }
+    .score-4 { background: #fed7aa; color: #7c2d12; }
+    .score-5 { background: #fee2e2; color: #7f1d1d; }
+
+    .note {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .callout {
+      background: var(--blue-soft);
+      border: 1px solid #7dd3fc;
+      border-radius: 8px;
+      padding: 14px 16px;
+      color: var(--navy);
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 1080px) {
+      .app { grid-template-columns: 1fr; }
+      aside {
+        height: auto;
+        position: static;
+      }
+      .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .topbar, .kpis, .grid-2, .grid-3, .opportunity-grid { grid-template-columns: 1fr; }
+      .heat-row { grid-template-columns: 1fr; }
+      .credit {
+        position: static;
+        margin-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="eyebrow">Interactive Dashboard</div>
+        <h1>PTTGC x SCC/SCGC Deal Perimeter</h1>
+      </div>
+      <nav class="nav" aria-label="Dashboard sections">
+        <button class="active" data-section="overview">Overview</button>
+        <button data-section="valuechain">Value Chain</button>
+        <button data-section="jv">JV Dashboard</button>
+        <button data-section="opportunity">Opportunity</button>
+        <button data-section="assets">Asset Bridge</button>
+        <button data-section="rm">RM Heatmap</button>
+      </nav>
+      <div class="legend" aria-label="Color legend">
+        <div class="legend-item"><span class="swatch" style="background:var(--ptt)"></span>PTTGC</div>
+        <div class="legend-item"><span class="swatch" style="background:var(--scc)"></span>SCC / SCGC</div>
+        <div class="legend-item"><span class="swatch" style="background:var(--jv)"></span>JV overlap</div>
+      </div>
+      <div class="credit">Developed by Thatchawat.w</div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div class="title-block">
+          <div class="eyebrow">Formula-backed static web dashboard</div>
+          <h2>Scenario view of JV revenue, EBITDA, asset transfer and RM opportunities</h2>
+          <p>Built from the deal perimeter model. Values are analyst proxies based on public 56-1 / One Report data and should be validated in data room before credit approval or facility sizing.</p>
+        </div>
+        <div class="selector">
+          <label for="scenarioSelect">Select scenario</label>
+          <select id="scenarioSelect"></select>
+          <div class="note" id="scenarioNote"></div>
+        </div>
+      </div>
+
+      <section id="overview" class="section active">
+        <div class="kpis">
+          <div class="card metric" style="--accent: var(--jv)">
+            <div class="label">Selected JV Revenue</div>
+            <div class="value" id="kpiRevenue"></div>
+            <div class="sub">THB million</div>
+          </div>
+          <div class="card metric" style="--accent: var(--green)">
+            <div class="label">Selected JV EBITDA</div>
+            <div class="value" id="kpiEbitda"></div>
+            <div class="sub">Adjusted EBITDA basis</div>
+          </div>
+          <div class="card metric" style="--accent: var(--ptt)">
+            <div class="label">PTTGC Asset Reduction</div>
+            <div class="value" id="kpiPttAsset"></div>
+            <div class="sub">After asset transfer proxy</div>
+          </div>
+          <div class="card metric" style="--accent: var(--scc)">
+            <div class="label">SCC Asset Reduction</div>
+            <div class="value" id="kpiSccAsset"></div>
+            <div class="sub">After asset transfer proxy</div>
+          </div>
+        </div>
+
+        <div class="callout" id="snapshot"></div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="panel-title">
+              <h3>JV Revenue and EBITDA by Scenario</h3>
+              <span>THB mn</span>
+            </div>
+            <div class="bars" id="financialBars"></div>
+          </div>
+          <div class="card">
+            <div class="panel-title">
+              <h3>Parent Asset Reduction by Scenario</h3>
+              <span>% reduction</span>
+            </div>
+            <div class="bars" id="assetBars"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="panel-title">
+            <h3>Scenario Financial Output</h3>
+            <span>changes with selected row highlight</span>
+          </div>
+          <div style="overflow:auto">
+            <table id="scenarioTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <section id="valuechain" class="section">
+        <div class="card">
+          <div class="panel-title">
+            <h3>Petrochemical Value Chain: where PTTGC and SCC/SCGC sit</h3>
+            <span>capacity shown where disclosed</span>
+          </div>
+          <div class="value-chain" id="valueChain"></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="panel-title"><h3>Likely JV overlap</h3><span class="tag jv">Base perimeter</span></div>
+            <p class="note">The announced study points to olefins and polyolefins PE/PP businesses in Thailand. This puts GC olefins/PE/HMC PP and SCGC Thai olefins/TPE PE/PP at the center.</p>
+          </div>
+          <div class="card">
+            <div class="panel-title"><h3>Excluded from base case</h3><span class="tag risk">Watch list</span></div>
+            <p class="note">PTTGC refinery, aromatics, intermediates, PVC/PET/PS and SCGC PVC/VCM, LSP Vietnam, recycling and services should be treated as expanded-scope triggers unless confirmed.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="jv" class="section">
+        <div class="kpis">
+          <div class="card metric" style="--accent: var(--jv)">
+            <div class="label">JV Revenue</div>
+            <div class="value" id="jvRevenueKpi"></div>
+            <div class="sub">THB million, selected scenario</div>
+          </div>
+          <div class="card metric" style="--accent: var(--green)">
+            <div class="label">JV EBITDA</div>
+            <div class="value" id="jvEbitdaKpi"></div>
+            <div class="sub">Adjusted EBITDA proxy</div>
+          </div>
+          <div class="card metric" style="--accent: var(--blue)">
+            <div class="label">JV Asset Size</div>
+            <div class="value" id="jvAssetKpi"></div>
+            <div class="sub">Transferred asset proxy</div>
+          </div>
+          <div class="card metric" style="--accent: var(--red)">
+            <div class="label">EBITDA Margin</div>
+            <div class="value" id="jvMarginKpi"></div>
+            <div class="sub">Adjusted EBITDA / revenue</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="panel-title">
+              <h3>JV Asset Source</h3>
+              <span>PTTGC vs SCC / SCGC</span>
+            </div>
+            <div class="split-bars" id="jvAssetSplit"></div>
+          </div>
+          <div class="card">
+            <div class="panel-title">
+              <h3>JV Revenue Source</h3>
+              <span>proxy contribution</span>
+            </div>
+            <div class="split-bars" id="jvRevenueSplit"></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="panel-title">
+              <h3>Asset Perimeter Summary</h3>
+              <span id="jvPerimeterTag" class="tag jv"></span>
+            </div>
+            <div id="jvAssetSummary" class="note"></div>
+          </div>
+          <div class="card">
+            <div class="panel-title">
+              <h3>Position in Petrochemical Value Chain</h3>
+              <span>where JV sits</span>
+            </div>
+            <div class="value-step-list" id="jvValueSteps"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="opportunity" class="section">
+        <div class="card">
+          <div class="panel-title">
+            <h3>RM Opportunity by Selected Scenario</h3>
+            <span id="opportunityScenario" class="tag jv"></span>
+          </div>
+          <p class="note" id="opportunityRead"></p>
+        </div>
+        <div class="opportunity-grid" id="opportunityGrid"></div>
+      </section>
+
+      <section id="assets" class="section">
+        <div class="grid-2">
+          <div class="card">
+            <div class="panel-title">
+              <h3>PTTGC Total Assets: Before / Transfer / After</h3>
+              <span>THB mn</span>
+            </div>
+            <div class="bars" id="pttAssetBridge"></div>
+          </div>
+          <div class="card">
+            <div class="panel-title">
+              <h3>SCC Total Assets: Before / Transfer / After</h3>
+              <span>THB mn</span>
+            </div>
+            <div class="bars" id="sccAssetBridge"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="panel-title"><h3>Asset Impact Table</h3><span>formula proxy view</span></div>
+          <div style="overflow:auto">
+            <table id="assetTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <section id="rm" class="section">
+        <div class="card">
+          <div class="panel-title">
+            <h3>RM Heatmap</h3>
+            <span>1 = low, 5 = high</span>
+          </div>
+          <div class="heatmap" id="heatmap"></div>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="panel-title"><h3>Facility angle</h3><span class="tag ptt">PTTGC</span></div>
+            <p class="note">Focus on parent credit impact, transferred EBITDA, debt/covenant treatment, FXDE, feedstock interface and working-capital sizing.</p>
+          </div>
+          <div class="card">
+            <div class="panel-title"><h3>Facility angle</h3><span class="tag scc">SCC / SCGC</span></div>
+            <p class="note">Focus on import feedstock LC/TR, Thai olefins/polyolefins transfer, LSP separation, SCGC asset mix and parent support requirements.</p>
+          </div>
+          <div class="card">
+            <div class="panel-title"><h3>JV banking angle</h3><span class="tag jv">JV</span></div>
+            <p class="note">Offer Day-1 operating accounts, trade lines, liquidity bridge, debt structuring, guarantees, hedging policy and cash management.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const scenarios = [
+      {
+        id: "A",
+        name: "A. Narrow olefins JV",
+        probability: "25%",
+        pttgcRevenue: 72736,
+        pttgcEbitda: 2219,
+        sccRevenue: 72548,
+        sccEbitdaReported: 1443,
+        sccEbitdaAdjusted: 4037,
+        jvRevenue: 145284,
+        jvEbitdaReported: 3662,
+        jvEbitdaAdjusted: 6256,
+        jvMarginAdjusted: 0.043,
+        pttAssetsBefore: 606373,
+        pttAssetTransfer: 55405,
+        pttAssetsAfter: 550968,
+        pttAssetReduction: 0.091,
+        sccAssetsBefore: 821591,
+        sccAssetTransfer: 129183,
+        sccAssetsAfter: 692408,
+        sccAssetReduction: 0.157,
+        jvAssetProxy: 184588,
+        note: "Narrow case: asset outflow is smaller; parent still faces earnings leakage and possible stranded cost, but balance sheet shrinkage is limited.",
+        rm: "LC/TR, FXDE, parent support, feedstock hedging",
+        heat: [3, 2, 2, 3, 4]
+      },
+      {
+        id: "B",
+        name: "B. Base integrated PE/PP JV",
+        probability: "50%",
+        pttgcRevenue: 155249,
+        pttgcEbitda: 7877,
+        sccRevenue: 117992,
+        sccEbitdaReported: 2348,
+        sccEbitdaAdjusted: 6566,
+        jvRevenue: 273241,
+        jvEbitdaReported: 10225,
+        jvEbitdaAdjusted: 14443,
+        jvMarginAdjusted: 0.0529,
+        pttAssetsBefore: 606373,
+        pttAssetTransfer: 123122,
+        pttAssetsAfter: 483251,
+        pttAssetReduction: 0.203,
+        sccAssetsBefore: 821591,
+        sccAssetTransfer: 210053,
+        sccAssetsAfter: 611538,
+        sccAssetReduction: 0.256,
+        jvAssetProxy: 333175,
+        note: "Base case: material asset base shifts into JV; parent asset turnover/leverage metrics need pro-forma presentation and lender explanation.",
+        rm: "Committed WC, trade, debt structuring, cash management",
+        heat: [5, 4, 4, 5, 5]
+      },
+      {
+        id: "C",
+        name: "C. Expanded perimeter",
+        probability: "15%",
+        pttgcRevenue: 186299,
+        pttgcEbitda: 9453,
+        sccRevenue: 135691,
+        sccEbitdaReported: 2701,
+        sccEbitdaAdjusted: 7550,
+        jvRevenue: 321990,
+        jvEbitdaReported: 12154,
+        jvEbitdaAdjusted: 17003,
+        jvMarginAdjusted: 0.0528,
+        pttAssetsBefore: 606373,
+        pttAssetTransfer: 147746,
+        pttAssetsAfter: 458627,
+        pttAssetReduction: 0.244,
+        sccAssetsBefore: 821591,
+        sccAssetTransfer: 241561,
+        sccAssetsAfter: 580030,
+        sccAssetReduction: 0.294,
+        jvAssetProxy: 389307,
+        note: "Expanded case: largest balance sheet impact; likely requires covenant reset, debt transfer, cash consideration or parent support clarity.",
+        rm: "Club/refinancing, covenant reset, LG/SBLC, bridge",
+        heat: [5, 4, 5, 5, 5]
+      },
+      {
+        id: "D",
+        name: "D. No transaction after DD",
+        probability: "10%",
+        pttgcRevenue: 0,
+        pttgcEbitda: 0,
+        sccRevenue: 0,
+        sccEbitdaReported: 0,
+        sccEbitdaAdjusted: 0,
+        jvRevenue: 0,
+        jvEbitdaReported: 0,
+        jvEbitdaAdjusted: 0,
+        jvMarginAdjusted: 0,
+        pttAssetsBefore: 606373,
+        pttAssetTransfer: 0,
+        pttAssetsAfter: 606373,
+        pttAssetReduction: 0,
+        sccAssetsBefore: 821591,
+        sccAssetTransfer: 0,
+        sccAssetsAfter: 821591,
+        sccAssetReduction: 0,
+        jvAssetProxy: 0,
+        note: "No transaction: no direct asset transfer; use work as treasury optimization and monitoring base case.",
+        rm: "Treasury optimization and wallet share",
+        heat: [1, 1, 1, 1, 2]
+      }
+    ];
+
+    const valueChain = [
+      {
+        stage: "Feedstock",
+        key: "feedstock",
+        products: "Crude, condensate, NGL, naphtha, LPG, ethane",
+        ptt: "Sources crude / condensate; uses ethane, LPG, naphtha",
+        scc: "Imports naphtha / LPG; no refinery or gas separation asset"
+      },
+      {
+        stage: "Refining / GSP",
+        key: "refining",
+        products: "LPG, naphtha, reformate, diesel, jet, fuel oil",
+        ptt: "Refinery 145k bpd crude + 135k bpd condensate",
+        scc: "Not core; buys feedstock"
+      },
+      {
+        stage: "Base Chemicals",
+        key: "baseChemicals",
+        products: "Olefins: ethylene, propylene. Aromatics: PX, benzene",
+        ptt: "Olefins 3,829 KTA; aromatics 2,419 KTA",
+        scc: "Thai olefins 3,400 KTA; LSP O/P 1,350 KTA"
+      },
+      {
+        stage: "Intermediates",
+        key: "intermediates",
+        products: "MEG, phenol, acetone, BPA, PO, PTA, VCM",
+        ptt: "MEG 423; phenol chain 954; PO 200; PTA 1,440 KTA",
+        scc: "VCM 590 KTA; PVC feedstock chain"
+      },
+      {
+        stage: "Polymers",
+        key: "polymers",
+        products: "PE, PP, PVC, PET, PS, compounds",
+        ptt: "PE 1,950 KTA; HMC PP 1,060 KTA; PVC/PET/PS",
+        scc: "Thai PE/PP 2,130 KTA; PVC 530 KTA; LSP PE/PP 1,400 KTA"
+      },
+      {
+        stage: "Converters",
+        key: "converters",
+        products: "Films, bottles, pipes, auto parts, packaging",
+        ptt: "Mostly resin producer; InnoPlus brand and customer converters",
+        scc: "Finished PVC products; HVA services and solutions"
+      },
+      {
+        stage: "End Use",
+        key: "endUse",
+        products: "Packaging, construction, auto, medical, agriculture",
+        ptt: "Indirect via customers; PE/PP/PET/PVC chain",
+        scc: "Building, packaging, auto, medical, infrastructure"
+      }
+    ];
+
+    const opportunityByScenario = {
+      A: {
+        read: "Narrow olefins perimeter creates a smaller but still bankable treasury and trade-finance setup. The RM angle is to secure Day-1 operating flows while protecting parent credit metrics from earnings leakage and feedstock price volatility.",
+        items: [
+          {
+            title: "Day-1 working capital and operating account package",
+            products: "Working capital RCF, OD, cash management, payroll/vendor account, liquidity sweep",
+            detail: "Support the JV when inventories, receivables and payables are carved out from parent systems. Facility size should follow feedstock days, customer credit terms and inventory policy after legal Day 1.",
+            risk: "Standalone JV may have limited track record; need parent support, borrowing base discipline and covenant headroom until stable operating cash flow is proven."
+          },
+          {
+            title: "Feedstock import and domestic trade lines",
+            products: "LC/TR, import bills, trust receipt, avalized bills, supplier payment",
+            detail: "Olefins assets rely on naphtha/LPG/ethane economics and short-cycle procurement. Bank can support feedstock purchase and settlement timing mismatch.",
+            risk: "Commodity price swing, margin compression and supply disruption can inflate drawings quickly; require clear eligible goods, tenor limit and concentration monitoring."
+          },
+          {
+            title: "FX and commodity hedging framework",
+            products: "FX Forward, FXDE, cross-currency swap, commodity-linked hedging advisory",
+            detail: "USD-linked feedstock and export-linked polymer/olefin pricing create FX exposure even when some sales are domestic. Hedging policy can be set before first independent treasury cycle.",
+            risk: "Basis risk between physical exposure and hedge instrument; mark-to-market pressure and hedge accounting treatment need approval path."
+          },
+          {
+            title: "Parent impact advisory",
+            products: "Covenant analysis, rating narrative, refinancing readiness, standby liquidity",
+            detail: "PTTGC and SCC lose part of asset base and EBITDA. RM can help prepare lender communication and pro-forma ratio bridge for existing creditors.",
+            risk: "If asset transfer is treated as disposal or deconsolidation, ratio impact may differ from management expectation; facility docs must be reviewed early."
+          }
+        ]
+      },
+      B: {
+        read: "Base integrated PE/PP scenario is the highest-probability banking case. The JV has material revenue scale, a larger transferred asset base and enough operating complexity to justify a full relationship-bank package.",
+        items: [
+          {
+            title: "Core relationship banking package for JV",
+            products: "Committed RCF, bilateral WC, cash pooling, virtual accounts, liquidity investment",
+            detail: "JV needs independent liquidity, operating accounts and payment architecture across feedstock suppliers, polymer customers and affiliates.",
+            risk: "Integration delays can create duplicated cost and trapped cash. Bank should require treasury operating model, signatory matrix and cash waterfall clarity."
+          },
+          {
+            title: "Trade finance for integrated olefins and polymers",
+            products: "LC/TR, export bills, shipping guarantee, supply-chain finance, receivables purchase",
+            detail: "PE/PP business has larger shipment volume and customer base than olefins-only case. Trade lines can support raw material purchase, finished-goods export and distributor terms.",
+            risk: "Customer concentration, inventory aging and petrochemical downcycle can weaken collateral quality. Tenor should map to actual cash conversion cycle."
+          },
+          {
+            title: "Debt transfer or refinancing bridge",
+            products: "Bridge loan, club loan, term loan, guarantee facility, agency role",
+            detail: "If assets move with debt or cash consideration, banks can arrange bridge-to-term refinancing for JV or parents. Strong opportunity if both groups want neutral leverage outcome.",
+            risk: "Final perimeter, valuation and security package may change during DD. Need conditions precedent tied to regulatory approval and asset-transfer completion."
+          },
+          {
+            title: "Risk management and treasury policy build-out",
+            products: "FXDE, IRS/CCS, commodity price hedging, treasury limit framework",
+            detail: "Integrated PE/PP cash flows are sensitive to naphtha-ethylene-polymer spreads and USD/THB. A formal hedging limit framework can be embedded early.",
+            risk: "Over-hedging during ramp-up or volume mismatch can create MTM volatility; treasury policy must define hedge ratio, tenor and authority."
+          }
+        ]
+      },
+      C: {
+        read: "Expanded perimeter creates the largest financing opportunity and the highest credit/documentation risk. RM should approach it as a structured finance and balance-sheet transition case, not only trade lines.",
+        items: [
+          {
+            title: "Structured acquisition-style / carve-out financing",
+            products: "Bridge loan, term loan B style bank tranche, club deal, mezzanine standby, guarantee",
+            detail: "Large asset transfer may require cash settlement, debt novation, or transitional funding. Bank can position as MLA, arranger, facility agent or hedging bank.",
+            risk: "Valuation, regulatory approval, anti-trust remedies and asset liens can delay drawdown. CPs and long-stop date must be tightly drafted."
+          },
+          {
+            title: "Covenant reset and parent balance-sheet support",
+            products: "Refinancing, amendment package, standby RCF, covenant waiver line",
+            detail: "PTTGC and SCC may see material EBITDA and asset reductions. RM can support existing facilities with pro-forma covenant reset and liquidity backstop.",
+            risk: "Parent lenders may push back if deconsolidated EBITDA loss is not offset by JV dividends or cash proceeds. Rating/risk appetite should be pre-cleared."
+          },
+          {
+            title: "Large-scale trade and supply-chain program",
+            products: "Supplier finance, receivables finance, inventory finance, LC/TR, export finance",
+            detail: "Expanded perimeter may include intermediates, polymers and converter-related flows. This creates supplier and customer financing programs around the JV ecosystem.",
+            risk: "Operational complexity, multiple product cycles and affiliate transactions make true-sale and recourse treatment important."
+          },
+          {
+            title: "Transition services and project execution guarantees",
+            products: "LG, SBLC, performance bond, advance payment guarantee, escrow",
+            detail: "Asset carve-out can require IT, utilities, shared services, tolling and transition service agreements. Bank guarantees can support performance and payment obligations.",
+            risk: "Guarantee wording can become open-ended if transition milestones are unclear. Expiry, claim mechanics and counter-indemnity must be controlled."
+          }
+        ]
+      },
+      D: {
+        read: "No-transaction scenario still has relationship value. Use the DD work to convert insight into treasury optimization, wallet share and early-warning monitoring for both parent groups.",
+        items: [
+          {
+            title: "Treasury optimization for parents",
+            products: "Cash management, liquidity sweep, deposit, FXDE, investment products",
+            detail: "If the JV does not proceed, treasury teams may still pursue efficiency after the strategic review. RM can offer lower-friction cash and FX optimization.",
+            risk: "No event-driven financing need means pricing competition is high; proposal must be anchored in operational savings or risk reduction."
+          },
+          {
+            title: "Monitoring and early-warning package",
+            products: "Credit review, covenant dashboard, commodity spread monitoring, rating watch",
+            detail: "Maintain a live view of olefins/polyolefins spreads, capex needs, feedstock mix and leverage to prepare for a future renewed JV or asset sale.",
+            risk: "Insight may not translate into revenue immediately; RM needs a clear follow-up cadence with treasury and CFO office."
+          },
+          {
+            title: "Trade wallet expansion",
+            products: "LC/TR, export bills, supplier payment, receivables finance",
+            detail: "Existing petrochemical flows remain bankable. Bank can use scenario analysis to target product lines with highest cash conversion pressure.",
+            risk: "Downcycle margin pressure can reduce utilization quality; limit setting should avoid chasing low-return volume."
+          },
+          {
+            title: "Strategic optionality readiness",
+            products: "Bridge term sheet, advisory support, escrow, guarantee line",
+            detail: "Keep indicative structures ready in case parties revisit a narrower perimeter, sale, tolling arrangement or joint marketing structure.",
+            risk: "Terms become stale if market rates, spreads or company leverage change; refresh assumptions every quarter."
+          }
+        ]
+      }
+    };
+
+    const formatNumber = value => Math.round(value).toLocaleString("en-US");
+    const formatPct = value => `${(value * 100).toFixed(1)}%`;
+
+    const scenarioSelect = document.getElementById("scenarioSelect");
+    scenarios.forEach((scenario, index) => {
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = scenario.name;
+      scenarioSelect.appendChild(option);
+    });
+    scenarioSelect.value = "1";
+
+    function barRow(label, value, max, color, suffix = "") {
+      const pct = max ? Math.max(0, Math.min(100, (value / max) * 100)) : 0;
+      return `
+        <div class="bar-row">
+          <div>${label}</div>
+          <div class="track"><div class="fill" style="width:${pct}%; --accent:${color}"></div></div>
+          <div style="text-align:right">${suffix === "%" ? formatPct(value) : formatNumber(value)}</div>
+        </div>
+      `;
+    }
+
+    function splitBarRow(title, pttValue, sccValue, total, unit = "THB mn") {
+      const pttPct = total ? (pttValue / total) * 100 : 0;
+      const sccPct = total ? (sccValue / total) * 100 : 0;
+      return `
+        <div>
+          <div class="panel-title" style="margin-bottom:7px">
+            <h3 style="font-size:13px">${title}</h3>
+            <span>${formatNumber(total)} ${unit}</span>
+          </div>
+          <div class="stacked" aria-label="${title}">
+            <span style="width:${pttPct}%"></span>
+            <span style="width:${sccPct}%"></span>
+          </div>
+          <div class="note" style="margin-top:7px">
+            PTTGC ${formatNumber(pttValue)} (${total ? pttPct.toFixed(1) : "0.0"}%) | SCC / SCGC ${formatNumber(sccValue)} (${total ? sccPct.toFixed(1) : "0.0"}%)
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFinancialBars(selected) {
+      const max = Math.max(selected.jvRevenue, selected.jvEbitdaAdjusted, 1);
+      document.getElementById("financialBars").innerHTML = `
+        ${barRow("JV Revenue", selected.jvRevenue, max, "var(--jv)")}
+        ${barRow("JV EBITDA Reported", selected.jvEbitdaReported, max, "var(--blue)")}
+        ${barRow("JV EBITDA Adjusted", selected.jvEbitdaAdjusted, max, "var(--green)")}
+        ${barRow("JV Asset Proxy", selected.jvAssetProxy, Math.max(selected.jvAssetProxy, selected.jvRevenue, 1), "var(--red)")}
+      `;
+    }
+
+    function renderAssetBars(selected) {
+      const max = Math.max(selected.pttAssetReduction, selected.sccAssetReduction, 0.01);
+      document.getElementById("assetBars").innerHTML = `
+        ${barRow("PTTGC Asset Reduction", selected.pttAssetReduction, max, "var(--ptt)", "%")}
+        ${barRow("SCC Asset Reduction", selected.sccAssetReduction, max, "var(--scc)", "%")}
+        ${barRow("PTTGC Asset Transferred", selected.pttAssetTransfer, Math.max(selected.pttAssetsBefore, 1), "var(--ptt)")}
+        ${barRow("SCC Asset Transferred", selected.sccAssetTransfer, Math.max(selected.sccAssetsBefore, 1), "var(--scc)")}
+      `;
+    }
+
+    function renderScenarioTable(selectedIndex) {
+      const headers = ["Scenario", "Prob.", "JV Revenue", "JV EBITDA Adj.", "Margin Adj.", "PTTGC Reduction", "SCC Reduction", "RM Read"];
+      const rows = scenarios.map((s, index) => `
+        <tr ${index === selectedIndex ? 'style="outline:2px solid var(--jv)"' : ""}>
+          <td><strong>${s.name}</strong></td>
+          <td>${s.probability}</td>
+          <td>${formatNumber(s.jvRevenue)}</td>
+          <td>${formatNumber(s.jvEbitdaAdjusted)}</td>
+          <td>${formatPct(s.jvMarginAdjusted)}</td>
+          <td>${formatPct(s.pttAssetReduction)}</td>
+          <td>${formatPct(s.sccAssetReduction)}</td>
+          <td>${s.rm}</td>
+        </tr>
+      `).join("");
+      document.getElementById("scenarioTable").innerHTML = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows}</tbody>`;
+    }
+
+    function jvStagesForScenario(scenario) {
+      if (scenario.id === "A") return new Set(["baseChemicals"]);
+      if (scenario.id === "B") return new Set(["baseChemicals", "polymers"]);
+      if (scenario.id === "C") return new Set(["baseChemicals", "intermediates", "polymers", "converters"]);
+      return new Set();
+    }
+
+    function jvPerimeterDescription(scenario) {
+      if (scenario.id === "A") {
+        return "Narrow olefins perimeter: mainly base chemicals / olefins assets. JV position is upstream petrochemical conversion from feedstock into ethylene and propylene, with polymer assets mostly outside the perimeter.";
+      }
+      if (scenario.id === "B") {
+        return "Base integrated PE/PP perimeter: olefins plus PE/PP polymers. JV sits in the core profit chain from base chemicals to polymer resins, which is the most likely RM financing perimeter.";
+      }
+      if (scenario.id === "C") {
+        return "Expanded perimeter: olefins, intermediates, polymers and converter/service-adjacent assets. JV becomes a broader petrochemical platform with larger financing need and larger parent balance-sheet impact.";
+      }
+      return "No asset transfer. JV does not sit in the value chain under this scenario; RM focus shifts to parent treasury optimization and future optionality.";
+    }
+
+    function renderJvDashboard(selected) {
+      document.getElementById("jvRevenueKpi").textContent = formatNumber(selected.jvRevenue);
+      document.getElementById("jvEbitdaKpi").textContent = formatNumber(selected.jvEbitdaAdjusted);
+      document.getElementById("jvAssetKpi").textContent = formatNumber(selected.jvAssetProxy);
+      document.getElementById("jvMarginKpi").textContent = formatPct(selected.jvMarginAdjusted);
+      document.getElementById("jvPerimeterTag").textContent = selected.name;
+
+      document.getElementById("jvAssetSplit").innerHTML = splitBarRow(
+        "Transferred asset source",
+        selected.pttAssetTransfer,
+        selected.sccAssetTransfer,
+        selected.jvAssetProxy
+      );
+      document.getElementById("jvRevenueSplit").innerHTML = splitBarRow(
+        "Revenue contribution source",
+        selected.pttgcRevenue,
+        selected.sccRevenue,
+        selected.jvRevenue
+      );
+
+      const pttAssetShare = selected.jvAssetProxy ? selected.pttAssetTransfer / selected.jvAssetProxy : 0;
+      const sccAssetShare = selected.jvAssetProxy ? selected.sccAssetTransfer / selected.jvAssetProxy : 0;
+      document.getElementById("jvAssetSummary").innerHTML = `
+        <strong>${jvPerimeterDescription(selected)}</strong><br><br>
+        Asset source: PTTGC ${formatNumber(selected.pttAssetTransfer)} MB (${formatPct(pttAssetShare)}) and SCC / SCGC ${formatNumber(selected.sccAssetTransfer)} MB (${formatPct(sccAssetShare)}). Revenue source proxy: PTTGC ${formatNumber(selected.pttgcRevenue)} MB and SCC / SCGC ${formatNumber(selected.sccRevenue)} MB.
+      `;
+
+      const highlighted = jvStagesForScenario(selected);
+      document.getElementById("jvValueSteps").innerHTML = valueChain.map(step => {
+        const active = highlighted.has(step.key);
+        return `<span class="tag ${active ? "jv" : "green"}" style="${active ? "" : "opacity:.45"}">${step.stage}</span>`;
+      }).join("");
+    }
+
+    function renderOpportunities(selected) {
+      const payload = opportunityByScenario[selected.id];
+      document.getElementById("opportunityScenario").textContent = selected.name;
+      document.getElementById("opportunityRead").textContent = payload.read;
+      document.getElementById("opportunityGrid").innerHTML = payload.items.map(item => `
+        <article class="card opportunity">
+          <header>
+            <h3>${item.title}</h3>
+            <span class="tag green">RM</span>
+          </header>
+          <p>${item.detail}</p>
+          <ul class="mini-list">
+            <li class="product-line"><strong>Bank products:</strong> ${item.products}</li>
+            <li class="risk-line"><strong>Key risk:</strong> ${item.risk}</li>
+          </ul>
+        </article>
+      `).join("");
+    }
+
+    function renderValueChain(selected) {
+      const highlighted = jvStagesForScenario(selected);
+      document.getElementById("valueChain").innerHTML = valueChain.map(step => `
+        <article class="stage">
+          <h3>${step.stage}</h3>
+          <div class="products">${step.products}</div>
+          <div class="footprint ptt ${highlighted.has(step.key) ? "jv-highlight" : ""}"><strong>${highlighted.has(step.key) ? "PTTGC → JV" : "PTTGC"}</strong><span>${step.ptt}</span></div>
+          <div class="footprint scc ${highlighted.has(step.key) ? "jv-highlight" : ""}"><strong>${highlighted.has(step.key) ? "SCC / SCGC → JV" : "SCC / SCGC"}</strong><span>${step.scc}</span></div>
+        </article>
+      `).join("");
+    }
+
+    function renderAssetBridge(selected) {
+      const pttMax = selected.pttAssetsBefore;
+      const sccMax = selected.sccAssetsBefore;
+      document.getElementById("pttAssetBridge").innerHTML = `
+        ${barRow("Before", selected.pttAssetsBefore, pttMax, "var(--ptt)")}
+        ${barRow("Transferred", selected.pttAssetTransfer, pttMax, "var(--red)")}
+        ${barRow("After", selected.pttAssetsAfter, pttMax, "var(--green)")}
+      `;
+      document.getElementById("sccAssetBridge").innerHTML = `
+        ${barRow("Before", selected.sccAssetsBefore, sccMax, "var(--scc)")}
+        ${barRow("Transferred", selected.sccAssetTransfer, sccMax, "var(--red)")}
+        ${barRow("After", selected.sccAssetsAfter, sccMax, "var(--green)")}
+      `;
+      const headers = ["Scenario", "PTTGC Before", "PTTGC Transfer", "PTTGC After", "SCC Before", "SCC Transfer", "SCC After", "JV Asset Proxy"];
+      const rows = scenarios.map(s => `
+        <tr ${s.id === selected.id ? 'style="outline:2px solid var(--jv)"' : ""}>
+          <td><strong>${s.name}</strong></td>
+          <td>${formatNumber(s.pttAssetsBefore)}</td>
+          <td>${formatNumber(s.pttAssetTransfer)}</td>
+          <td>${formatNumber(s.pttAssetsAfter)}</td>
+          <td>${formatNumber(s.sccAssetsBefore)}</td>
+          <td>${formatNumber(s.sccAssetTransfer)}</td>
+          <td>${formatNumber(s.sccAssetsAfter)}</td>
+          <td>${formatNumber(s.jvAssetProxy)}</td>
+        </tr>
+      `).join("");
+      document.getElementById("assetTable").innerHTML = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows}</tbody>`;
+    }
+
+    function renderHeatmap() {
+      const headers = ["Scenario", "Revenue Scale", "EBITDA Quality", "Asset Transfer", "Parent Credit Pressure", "Financing Opportunity", "Primary RM Angle"];
+      const header = `<div class="heat-row">${headers.map(h => `<div class="heat-cell" style="background:var(--navy);color:white">${h}</div>`).join("")}</div>`;
+      const rows = scenarios.map(s => `
+        <div class="heat-row">
+          <div class="heat-cell"><strong>${s.name}</strong></div>
+          ${s.heat.map(score => `<div class="heat-cell score-${score}">${score}</div>`).join("")}
+          <div class="heat-cell">${s.rm}</div>
+        </div>
+      `).join("");
+      document.getElementById("heatmap").innerHTML = header + rows;
+    }
+
+    function update() {
+      const selectedIndex = Number(scenarioSelect.value);
+      const s = scenarios[selectedIndex];
+      document.getElementById("scenarioNote").textContent = s.note;
+      document.getElementById("kpiRevenue").textContent = formatNumber(s.jvRevenue);
+      document.getElementById("kpiEbitda").textContent = formatNumber(s.jvEbitdaAdjusted);
+      document.getElementById("kpiPttAsset").textContent = formatPct(s.pttAssetReduction);
+      document.getElementById("kpiSccAsset").textContent = formatPct(s.sccAssetReduction);
+      document.getElementById("snapshot").textContent = `JV Revenue ${formatNumber(s.jvRevenue)} MB | Adjusted EBITDA ${formatNumber(s.jvEbitdaAdjusted)} MB | JV Asset Proxy ${formatNumber(s.jvAssetProxy)} MB`;
+      renderFinancialBars(s);
+      renderAssetBars(s);
+      renderScenarioTable(selectedIndex);
+      renderValueChain(s);
+      renderJvDashboard(s);
+      renderOpportunities(s);
+      renderAssetBridge(s);
+    }
+
+    document.querySelectorAll(".nav button").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".nav button").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
+        button.classList.add("active");
+        document.getElementById(button.dataset.section).classList.add("active");
+      });
+    });
+
+    scenarioSelect.addEventListener("change", update);
+    renderHeatmap();
+    update();
+  </script>
+</body>
+</html>
