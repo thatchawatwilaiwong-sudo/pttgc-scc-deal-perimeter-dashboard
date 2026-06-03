@@ -2,7 +2,7 @@
 
 Interactive dashboard สำหรับใช้ประกอบการนำเสนอ preliminary due diligence ของโครงการ JV ระหว่าง PTTGC และ SCC/SCGC ในธุรกิจ petrochemical olefins และ polyolefins
 
-ข้อมูลใน dashboard เป็น analyst proxy จากโมเดล Excel และข้อมูลสาธารณะ เช่น 56-1 / One Report จึงควรใช้เป็น discussion pack สำหรับ RM / credit / management ก่อน และควร validate เพิ่มจาก data room หรือข้อมูลจากบริษัทก่อนใช้ตัดสินใจด้าน credit approval
+ข้อมูลใน dashboard เป็น analyst proxy จากโมเดล Excel, ข้อมูลสาธารณะ เช่น 56-1 / One Report และไฟล์ SCGC FY2025 PDF ที่ใช้ปรับฐานข้อมูลฝั่ง SCC/SCGC ให้เป็น SCGC segment disclosure โดยตรง จึงควรใช้เป็น discussion pack สำหรับ RM / credit / management ก่อน และควร validate เพิ่มจาก data room หรือข้อมูลจากบริษัทก่อนใช้ตัดสินใจด้าน credit approval
 
 ## วิธีเปิดใช้งาน
 
@@ -30,13 +30,13 @@ http://localhost:8080/index.html
 ## คำอธิบาย Scenario
 
 - `Scenario A: Narrow olefins JV`  
-  Perimeter แคบ เน้น olefins/base chemicals เป็นหลัก ผลกระทบต่อ parent asset และ EBITDA ต่ำกว่า scenario อื่น แต่ยังมี financing opportunity จาก working capital, trade finance และ hedging
+  Perimeter แคบ เน้น olefins/base chemicals เป็นหลัก โดยใช้ Map Ta Phut Olefins จาก SCGC Note 18 เป็น proxy ฝั่ง SCGC ผลกระทบต่อ parent asset ต่ำกว่า scenario อื่น แต่ยังมี financing opportunity จาก working capital, trade finance และ hedging
 
 - `Scenario B: Base integrated PE/PP JV`  
-  Base case ที่มีโอกาสสูงสุด ครอบคลุม olefins + PE/PP polymers ทำให้ JV มี scale รายได้และ asset size ที่ meaningful เหมาะสำหรับเสนอ full banking package
+  Base case ที่มีโอกาสสูงสุด ครอบคลุม olefins + PE/PP polymers โดยใช้ SCGC Olefins Chain in Thailand จาก Note 19 เป็นฐานฝั่ง SCGC เหมาะสำหรับเสนอ full banking package
 
 - `Scenario C: Expanded perimeter`  
-  Perimeter กว้างที่สุด รวม base chemicals, intermediates, polymers และ converter/service-adjacent assets บางส่วน มีโอกาส financing สูงสุด แต่ credit risk และ execution risk สูงที่สุดเช่นกัน
+  Perimeter กว้างขึ้น โดยเพิ่ม SCGC Vinyl Chain เข้าไปในฐาน SCGC มีโอกาส financing สูงสุด แต่ credit risk และ execution risk สูงที่สุดเช่นกัน
 
 - `Scenario D: No transaction after DD`  
   ไม่มี asset transfer โดยตรง แต่ยังใช้ analysis เพื่อทำ treasury optimization, monitoring และเตรียมความพร้อมหากดีลกลับมาใหม่
@@ -137,4 +137,5 @@ http://localhost:8080/index.html
 - No external JavaScript library required.
 - Scenario dropdown updates KPI cards, tables, charts and opportunity cards in the browser.
 - Values are analyst proxies based on the Excel model and public 56-1 / One Report data.
+- SCC/SCGC values were refreshed using the newly provided SCGC FY2025 PDF: consolidated SCGC revenue/EBITDA/assets plus Note 18 and Note 19 segment disclosures.
 - Footer credit is shown as `Developed by Thatchawat.w`.
