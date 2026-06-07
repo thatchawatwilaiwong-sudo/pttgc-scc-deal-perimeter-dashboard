@@ -594,6 +594,13 @@
         { id: "covestro", name: "Covestro", color: "#65a30d" },
         { id: "ube", name: "UBE", color: "#a16207" },
         { id: "dow", name: "Dow / SCGC JV", color: "#f59e0b" },
+        { id: "pttac", name: "PTTAC", color: "#0284c7" },
+        { id: "thai_mma", name: "Thai MMA", color: "#db2777" },
+        { id: "gc_phenol", name: "GC Phenol / PTT Phenol", color: "#4f46e5" },
+        { id: "tafl", name: "Thai Acrylic Fibre / TAF", color: "#c026d3" },
+        { id: "thai_abs", name: "Thai ABS", color: "#059669" },
+        { id: "ineos", name: "INEOS Styrolution", color: "#0f766e" },
+        { id: "thai_pet", name: "Thai PET Resin / IVL", color: "#2563eb" },
         { id: "other", name: "Other converters / market", color: "#64748b" }
       ];
 
@@ -634,21 +641,24 @@
         { id: "c4_pool", stage: "monomer", x: 1000, y: 548, title: "C4 / Butadiene Pool", role: "Butadiene, butene-1, synthetic rubber feedstock", companies: ["gc", "bst", "irpc"], caps: [{ product: "GC BD", value: "75 KTA" }, { product: "GC Butene-1", value: "25 KTA" }] },
 
         { id: "ethylene_outlets", stage: "intermediate", x: 1228, y: 82, title: "Ethylene Outlets", role: "PE, VCM/PVC, EO/EG and merchant ethylene", companies: ["gc", "scgc", "irpc", "tpe", "spc", "tpc"], caps: [{ product: "Ethylene supply shown", value: "4,927 KTA GC+SCGC" }] },
-        { id: "propylene_outlets", stage: "intermediate", x: 1228, y: 244, title: "Propylene Outlets", role: "PP, PO/polyols, acrylonitrile and merchant propylene", companies: ["gc", "scgc", "irpc", "hmc", "sprc"], caps: [{ product: "Propylene supply shown", value: "3,544 KTA proxy" }] },
-        { id: "aromatics_derivatives", stage: "intermediate", x: 1228, y: 406, title: "Aromatics Derivatives", role: "PX/PTA/PET, benzene/phenol/BPA, solvents", companies: ["gc", "tpx", "indorama", "covestro"], caps: [{ product: "PTA / PET / phenol / BPA", value: "n.d." }] },
+        { id: "propylene_outlets", stage: "intermediate", x: 1228, y: 244, title: "Propylene Outlets", role: "PP, PO/polyols, acrylonitrile and merchant propylene", companies: ["gc", "scgc", "irpc", "hmc", "sprc", "pttac", "thai_mma"], caps: [{ product: "Propylene supply shown", value: "3,544 KTA proxy" }] },
+        { id: "aromatics_derivatives", stage: "intermediate", x: 1228, y: 406, title: "Aromatics Derivatives", role: "PX/PTA/PET, benzene/phenol/BPA, solvents", companies: ["gc", "tpx", "indorama", "covestro", "gc_phenol", "thai_pet"], caps: [{ product: "PTA / PET / phenol / BPA", value: "n.d." }] },
         { id: "vinyl_chain", stage: "intermediate", x: 1228, y: 568, title: "Vinyl Chain", role: "VCM, PVC, caustic soda and PVC compounds", companies: ["scgc", "tpc"], caps: [{ product: "VCM / PVC chain", value: "1,686 KTA SCGC proxy" }, { product: "TPC PVC", value: "530 KTA" }] },
-        { id: "c4_derivatives", stage: "intermediate", x: 1228, y: 730, title: "C4 / Specialty Derivatives", role: "Butadiene, synthetic rubber, MMA, caprolactam and specialty chemicals", companies: ["gc", "bst", "ube"], caps: [{ product: "Side-chain capacity", value: "n.d." }] },
+        { id: "phenol_bpa_chain", stage: "intermediate", x: 1228, y: 656, title: "Phenol / BPA / Epoxy Chain", role: "Phenol, acetone, BPA and epoxy resin route into PC/epoxy/end-use chemicals", companies: ["gc_phenol", "covestro", "gc"], caps: [{ product: "Phenol", value: "492 KTA proxy" }, { product: "Acetone", value: "304 KTA proxy" }, { product: "BPA", value: "532 KTA proxy" }] },
+        { id: "c4_derivatives", stage: "intermediate", x: 1228, y: 760, title: "C4 / Specialty Derivatives", role: "Butadiene, synthetic rubber, MMA, caprolactam and specialty chemicals", companies: ["gc", "bst", "ube"], caps: [{ product: "Side-chain capacity", value: "n.d." }] },
+        { id: "acn_mma_chain", stage: "intermediate", x: 1228, y: 844, title: "ACN / MMA / Acrylic Chain", role: "Acrylonitrile, methyl methacrylate and acrylic fiber route", companies: ["pttac", "thai_mma", "tafl"], caps: [{ product: "ACN", value: "200 KTA proxy" }, { product: "MMA", value: "275 KTA proxy" }, { product: "Acrylic fiber", value: "154 KTA proxy" }] },
 
         { id: "gc_pe", stage: "downstream", x: 1470, y: 50, title: "GC PE", role: "GC direct PE outlet for ethylene", companies: ["gc"], caps: [{ product: "LDPE/EVA", value: "300 KTA" }, { product: "LLDPE", value: "800 KTA" }, { product: "HDPE", value: "850 KTA" }, { product: "Total PE", value: "1,950 KTA" }] },
         { id: "scgc_pepp", stage: "downstream", x: 1470, y: 180, title: "SCGC Thai PE / PP", role: "SCGC downstream polyolefins base in Thailand", companies: ["scgc", "tpe", "spc"], caps: [{ product: "PE", value: "1,270 KTA" }, { product: "PP", value: "860 KTA" }, { product: "Total", value: "2,130 KTA" }] },
         { id: "irpc_polymer", stage: "downstream", x: 1470, y: 310, title: "IRPC PE / PP / ABS", role: "Integrated downstream polymers", companies: ["irpc"], caps: [{ product: "HDPE", value: "140 KTA" }, { product: "PP", value: "732 KTA" }, { product: "ABS/SAN", value: "n.d." }] },
         { id: "hmc_pp", stage: "downstream", x: 1470, y: 440, title: "HMC Polymers", role: "PP producer; PTTGC associate exposure", companies: ["hmc", "gc"], caps: [{ product: "PP", value: "1,060 KTA" }, { product: "PTTGC stake", value: "~41%" }] },
-        { id: "pvc_pet", stage: "downstream", x: 1470, y: 570, title: "PVC / PET / Engineering Resins", role: "PVC, PET, PC, ABS/SAN and other downstream resins", companies: ["tpc", "indorama", "covestro", "scgc"], caps: [{ product: "PVC", value: "896 KTA proxy" }, { product: "PET / PC", value: "n.d." }] },
-        { id: "specialty", stage: "downstream", x: 1470, y: 700, title: "Compounds / Specialty Chemicals", role: "Compounds, polyols, MMA, caprolactam, specialty additives", companies: ["gc", "scgc", "dow", "ube", "bst"], caps: [{ product: "Specialty capacity", value: "n.d." }] },
+        { id: "pvc_pet", stage: "downstream", x: 1470, y: 570, title: "PVC / PET / Engineering Resins", role: "PVC, PET, PC, ABS/SAN and other downstream resins", companies: ["tpc", "indorama", "covestro", "scgc", "thai_pet"], caps: [{ product: "PVC", value: "896 KTA proxy" }, { product: "PET resin", value: "n.d." }, { product: "PC", value: "497 KTA proxy" }] },
+        { id: "specialty", stage: "downstream", x: 1470, y: 700, title: "Compounds / Specialty Chemicals", role: "Compounds, polyols, MMA, caprolactam, specialty additives", companies: ["gc", "scgc", "dow", "ube", "bst", "thai_mma", "pttac"], caps: [{ product: "Specialty capacity", value: "n.d." }] },
+        { id: "abs_san_ps", stage: "downstream", x: 1470, y: 828, title: "ABS / SAN / PS / PMMA", role: "Styrenics and acrylic resins used in auto parts, appliances, electronics and sheet applications", companies: ["irpc", "thai_abs", "ineos", "thai_mma"], caps: [{ product: "ABS/SAN", value: "154 KTA proxy" }, { product: "PMMA", value: "13 KTA proxy" }, { product: "PS", value: "365 KTA proxy" }] },
 
         { id: "domestic_market", stage: "market", x: 1668, y: 128, width: 150, title: "Domestic Customers", role: "Packaging, construction, automotive, consumer and industrial demand", companies: ["other", "gc", "scgc", "irpc"], caps: [{ product: "Demand sink", value: "n.d." }] },
         { id: "export_market", stage: "market", x: 1668, y: 354, width: 150, title: "Export Market", role: "Regional balancing for resin, monomer and intermediates", companies: ["other", "gc", "scgc", "irpc"], caps: [{ product: "Export sink", value: "n.d." }] },
-        { id: "converters", stage: "market", x: 1668, y: 580, width: 150, title: "Converters / Brand Owners", role: "Films, bottles, pipes, fibers, auto parts, packaging", companies: ["other"], caps: [{ product: "Conversion capacity", value: "n.d." }] }
+        { id: "converters", stage: "market", x: 1668, y: 580, width: 150, title: "Converters / Brand Owners", role: "Films, bottles, pipes, fibers, auto parts, packaging", companies: ["other", "tafl", "thai_abs", "ineos", "thai_pet"], caps: [{ product: "Conversion capacity", value: "n.d." }] }
       ];
 
       const flows = [
@@ -660,10 +670,10 @@
         ["gc_olefins", "propylene_outlets"], ["moc", "propylene_outlets"], ["roc", "propylene_outlets"], ["irpc_olefins", "propylene_outlets"], ["sprc_propylene", "propylene_outlets"],
         ["gc_aromatics", "aromatics_derivatives"], ["tpx_aromatics", "aromatics_derivatives"], ["irpc_aromatics", "aromatics_derivatives"], ["c4_pool", "c4_derivatives"],
         ["ethylene_outlets", "gc_pe"], ["ethylene_outlets", "scgc_pepp"], ["ethylene_outlets", "irpc_polymer"], ["ethylene_outlets", "vinyl_chain"],
-        ["propylene_outlets", "scgc_pepp"], ["propylene_outlets", "irpc_polymer"], ["propylene_outlets", "hmc_pp"], ["propylene_outlets", "specialty"],
-        ["aromatics_derivatives", "pvc_pet"], ["vinyl_chain", "pvc_pet"], ["c4_derivatives", "specialty"],
-        ["gc_pe", "domestic_market"], ["scgc_pepp", "domestic_market"], ["irpc_polymer", "domestic_market"], ["hmc_pp", "domestic_market"], ["pvc_pet", "domestic_market"], ["specialty", "domestic_market"],
-        ["gc_pe", "export_market"], ["scgc_pepp", "export_market"], ["irpc_polymer", "export_market"], ["pvc_pet", "export_market"], ["domestic_market", "converters"]
+        ["propylene_outlets", "scgc_pepp"], ["propylene_outlets", "irpc_polymer"], ["propylene_outlets", "hmc_pp"], ["propylene_outlets", "specialty"], ["propylene_outlets", "acn_mma_chain"],
+        ["aromatics_derivatives", "pvc_pet"], ["aromatics_derivatives", "phenol_bpa_chain"], ["vinyl_chain", "pvc_pet"], ["c4_derivatives", "specialty"], ["phenol_bpa_chain", "pvc_pet"], ["acn_mma_chain", "abs_san_ps"],
+        ["gc_pe", "domestic_market"], ["scgc_pepp", "domestic_market"], ["irpc_polymer", "domestic_market"], ["hmc_pp", "domestic_market"], ["pvc_pet", "domestic_market"], ["specialty", "domestic_market"], ["abs_san_ps", "domestic_market"],
+        ["gc_pe", "export_market"], ["scgc_pepp", "export_market"], ["irpc_polymer", "export_market"], ["pvc_pet", "export_market"], ["abs_san_ps", "export_market"], ["domestic_market", "converters"]
       ];
 
       const companyById = new Map(companies.map(c => [c.id, c]));
