@@ -275,16 +275,27 @@
 
       .flow {
         stroke: #64748b;
-        stroke-width: 2.5;
+        stroke-width: 1.35;
         fill: none;
-        opacity: .72;
+        opacity: .28;
+        mix-blend-mode: multiply;
+        stroke-linecap: round;
+        stroke-linejoin: round;
       }
 
       .flow.active {
         stroke: var(--selected);
-        stroke-width: 5;
+        stroke-width: 3.4;
         opacity: 1;
+        mix-blend-mode: normal;
       }
+
+      .flow.stage-feed { stroke: rgba(124,58,237,.42); }
+      .flow.stage-petroleum { stroke: rgba(48,79,159,.42); }
+      .flow.stage-monomer { stroke: rgba(15,118,110,.42); }
+      .flow.stage-intermediate { stroke: rgba(180,83,9,.42); }
+      .flow.stage-downstream { stroke: rgba(138,90,20,.42); }
+      .flow.stage-market { stroke: rgba(71,85,105,.42); }
 
       .node {
         position: absolute;
@@ -355,6 +366,12 @@
         border-color: var(--selected);
         box-shadow: 0 0 0 5px rgba(124,58,237,.24), 5px 5px 0 rgba(0,0,0,.18);
         z-index: 4;
+      }
+
+      .node:hover {
+        z-index: 6;
+        border-color: var(--selected);
+        box-shadow: 0 0 0 4px rgba(124,58,237,.16), 5px 5px 0 rgba(0,0,0,.18);
       }
 
       .node.dim {
@@ -589,12 +606,14 @@
                 <span id="companyCountBadge" class="coverage-badge">Company coverage</span>
                 <span id="nodeCountBadge" class="coverage-badge">Value-chain boxes</span>
                 <span id="capacityCountBadge" class="coverage-badge">Capacity rows</span>
+                <span class="coverage-badge">Updated: Jun 2026 public sources</span>
                 <span class="coverage-badge">Company highlight + fade filter</span>
               </div>
             </div>
             <div class="unit">
               Unit: KTA unless stated otherwise; refinery/GSP shown in KBD/MMSCFD<br />
               Company filter highlights selected players and fades the rest<br />
+              Sources: GC public capacity, SCGC 2025 brochure, PTT 2024 supplement, APIC/S&P 2025 context<br />
               Developed by Thatchawat.w
             </div>
           </div>
@@ -643,8 +662,9 @@
             <div class="summary">
               <h2>Data Coverage</h2>
               <ul>
-                <li>GC capacity ties to GC One Report / PTT disclosures where available</li>
-                <li>Thai PE/PP and olefins capacity uses public APIC-style industry table proxies</li>
+                <li>GC capacity ties to GC capacity page and PTT 2024 56-1 supplement where available</li>
+                <li>SCGC PE/PP/PVC capacity refreshed from 2025 SCGC brochure where available</li>
+                <li>Industry notes include APIC/S&P 2025 context: Thailand ethylene 5.5 mtpa, feedstock pressure and selected restructuring</li>
                 <li>Items with "n.d." mean company exists in chain but capacity must be verified</li>
               </ul>
             </div>
@@ -751,7 +771,7 @@
         { id: "fuel_oil", stage: "petroleum", x: 454, y: 904, title: "Fuel Oil", role: "Heavy refinery product and industrial fuel", companies: ["gc", "top", "bcp", "bsrc", "sprc", "irpc"], caps: [{ product: "Fuel oil pool", value: "n.d." }] },
         { id: "bitumen", stage: "petroleum", x: 454, y: 1002, title: "Bitumen", role: "Heavy refinery product for road and construction use", companies: ["top", "bcp", "bsrc", "irpc"], caps: [{ product: "Bitumen pool", value: "n.d." }] },
 
-        { id: "ethylene", stage: "monomer", x: 680, y: 44, title: "Ethylene", role: "Core olefin monomer for PE, EO/EG, VCM and styrenics", companies: ["gc", "scgc", "irpc"], caps: [{ product: "GC", value: "2,827 KTA" }, { product: "SCGC MOC", value: "1,200 KTA" }, { product: "SCGC ROC", value: "900 KTA" }, { product: "IRPC", value: "n.d." }] },
+        { id: "ethylene", stage: "monomer", x: 680, y: 44, title: "Ethylene", role: "Core olefin monomer for PE, EO/EG, VCM and styrenics; Thailand industry capacity about 5.5 mtpa in 2024", companies: ["gc", "scgc", "irpc"], caps: [{ product: "Thailand 2024", value: "~5,500 KTA" }, { product: "GC", value: "2,827 KTA" }, { product: "SCGC MOC", value: "1,200 KTA" }, { product: "SCGC ROC", value: "900 KTA" }, { product: "IRPC", value: "n.d." }] },
         { id: "propylene", stage: "monomer", x: 680, y: 170, title: "Propylene", role: "Core olefin monomer for PP, PO, ACN and cumene", companies: ["gc", "scgc", "irpc", "sprc"], caps: [{ product: "GC", value: "902 KTA" }, { product: "SCGC MOC", value: "850 KTA" }, { product: "SCGC ROC", value: "450 KTA" }, { product: "IRPC", value: "732 KTA" }, { product: "SPRC", value: "155 KTA" }] },
         { id: "butadiene", stage: "monomer", x: 680, y: 308, title: "Butadiene", role: "C4 monomer for synthetic rubber and ABS", companies: ["gc", "bst", "irpc"], caps: [{ product: "GC", value: "75 KTA" }, { product: "BST / others", value: "n.d." }] },
         { id: "butene1", stage: "monomer", x: 680, y: 426, title: "Butene-1", role: "Comonomer for LLDPE/HDPE and C4 chain", companies: ["gc", "bst"], caps: [{ product: "GC", value: "25 KTA" }] },
@@ -772,15 +792,15 @@
         { id: "bpa", stage: "intermediate", x: 1088, y: 684, title: "BPA", role: "Bisphenol-A route into PC and epoxy resin", companies: ["covestro", "gc_phenol"], caps: [{ product: "BPA", value: "532 KTA proxy" }] },
         { id: "pta", stage: "intermediate", x: 1088, y: 778, title: "PTA", role: "PX derivative into PET resin and polyester", companies: ["indorama", "gc"], caps: [{ product: "PTA", value: "1,400 KTA proxy" }] },
         { id: "pa", stage: "intermediate", x: 1088, y: 872, title: "PA", role: "Phthalic anhydride route into plasticizers / alkyd resin", companies: ["gc"], caps: [{ product: "PA", value: "50 KTA proxy" }] },
-        { id: "acn", stage: "intermediate", x: 1088, y: 966, title: "Acrylonitrile", role: "ACN route into acrylic fiber, ABS/SAN and nitrile chain", companies: ["pttac"], caps: [{ product: "ACN", value: "200 KTA proxy" }] },
+        { id: "acn", stage: "intermediate", x: 1088, y: 966, title: "Acrylonitrile", role: "ACN route into acrylic fiber, ABS/SAN and nitrile chain; PTTAC termination announced in 2024 with dismantling plan by 2028", companies: ["pttac"], caps: [{ product: "ACN", value: "200 KTA historical / ceased" }] },
         { id: "mma", stage: "intermediate", x: 1088, y: 1060, title: "MMA / MAA", role: "Methyl methacrylate route into PMMA and acrylic sheet", companies: ["thai_mma"], caps: [{ product: "MMA", value: "275 KTA proxy" }, { product: "MAA", value: "28 KTA proxy" }] },
-        { id: "caprolactam", stage: "intermediate", x: 1088, y: 1154, title: "Caprolactam", role: "Cyclohexane / benzene derivative into nylon-6", companies: ["ube"], caps: [{ product: "Caprolactam", value: "130 KTA proxy" }] },
+        { id: "caprolactam", stage: "intermediate", x: 1088, y: 1154, title: "Caprolactam", role: "Cyclohexane / benzene derivative into nylon-6; UBE Thailand restructuring flagged in APIC 2025 context", companies: ["ube"], caps: [{ product: "Caprolactam", value: "130 KTA historical / restructuring" }] },
 
-        { id: "hdpe", stage: "downstream", x: 1320, y: 28, title: "HDPE", role: "Rigid packaging, pipe and industrial resin", companies: ["gc", "scgc", "irpc"], caps: [{ product: "GC HDPE", value: "850 KTA" }, { product: "SCGC/TPE HDPE", value: "n.d." }, { product: "IRPC HDPE", value: "140 KTA" }] },
-        { id: "lldpe", stage: "downstream", x: 1320, y: 122, title: "LLDPE", role: "Film and packaging resin", companies: ["gc", "scgc", "tpe", "spc"], caps: [{ product: "GC LLDPE", value: "800 KTA" }, { product: "SCGC/TPE/SSLC", value: "n.d." }] },
-        { id: "ldpe_eva", stage: "downstream", x: 1320, y: 216, title: "LDPE / EVA", role: "Flexible packaging, coating and specialty film", companies: ["gc", "tpi", "scgc"], caps: [{ product: "GC LDPE/EVA", value: "300 KTA" }, { product: "TPI LDPE", value: "156 KTA proxy" }] },
+        { id: "hdpe", stage: "downstream", x: 1320, y: 28, title: "HDPE", role: "Rigid packaging, pipe and industrial resin", companies: ["gc", "scgc", "irpc"], caps: [{ product: "GC HDPE", value: "850 KTA" }, { product: "SCGC HDPE", value: "980 KTA" }, { product: "IRPC HDPE", value: "140 KTA" }] },
+        { id: "lldpe", stage: "downstream", x: 1320, y: 122, title: "LLDPE", role: "Film and packaging resin", companies: ["gc", "scgc", "tpe", "spc"], caps: [{ product: "GC LLDPE", value: "800 KTA" }, { product: "SCGC LLDPE", value: "140 KTA" }] },
+        { id: "ldpe_eva", stage: "downstream", x: 1320, y: 216, title: "LDPE / EVA", role: "Flexible packaging, coating and specialty film", companies: ["gc", "tpi", "scgc"], caps: [{ product: "GC LDPE/EVA", value: "300 KTA" }, { product: "SCGC LDPE", value: "160 KTA" }, { product: "TPI LDPE", value: "156 KTA proxy" }] },
         { id: "pp", stage: "downstream", x: 1320, y: 310, title: "PP", role: "Polypropylene for packaging, auto and consumer goods", companies: ["scgc", "irpc", "hmc", "gc"], caps: [{ product: "SCGC PP", value: "860 KTA" }, { product: "IRPC PP", value: "732 KTA" }, { product: "HMC PP", value: "1,060 KTA" }] },
-        { id: "pvc", stage: "downstream", x: 1320, y: 404, title: "PVC", role: "Pipe, building products and compounds", companies: ["scgc", "tpc", "tpc_paste", "avt", "thai_plastic"], caps: [{ product: "TPC PVC", value: "530 KTA" }, { product: "TPC Paste", value: "36 KTA proxy" }, { product: "AVT", value: "330 KTA proxy" }] },
+        { id: "pvc", stage: "downstream", x: 1320, y: 404, title: "PVC", role: "Pipe, building products and compounds", companies: ["scgc", "tpc", "tpc_paste", "avt", "thai_plastic"], caps: [{ product: "SCGC PVC", value: "850 KTA" }, { product: "SCGC PVC Paste", value: "40 KTA" }, { product: "AVT", value: "330 KTA proxy" }] },
         { id: "pet", stage: "downstream", x: 1320, y: 498, title: "PET Resin", role: "Bottle, packaging and polyester chain", companies: ["indorama", "thai_pet"], caps: [{ product: "PET", value: "n.d." }] },
         { id: "pc", stage: "downstream", x: 1320, y: 592, title: "Polycarbonate / PC", role: "Engineering resin from BPA", companies: ["covestro"], caps: [{ product: "PC", value: "497 KTA proxy" }] },
         { id: "phenolic_resin", stage: "downstream", x: 1320, y: 686, title: "Phenolic Resin", role: "Phenol derivative used in industrial resins", companies: ["gc_phenol"], caps: [{ product: "Phenolic resin", value: "n.d." }] },
@@ -797,7 +817,7 @@
         { id: "plasticizers", stage: "downstream", x: 1530, y: 504, title: "Plasticizers", role: "PA/OX derivative for flexible PVC", companies: ["gc", "other"], caps: [{ product: "Plasticizers", value: "n.d." }] },
         { id: "lab", stage: "downstream", x: 1530, y: 612, title: "LAB", role: "Detergent intermediate chain", companies: ["labix"], caps: [{ product: "LAB", value: "120 KTA proxy" }] },
         { id: "alkyd_upr", stage: "downstream", x: 1530, y: 720, title: "Alkyd / UPR Resin", role: "PA derivative into coating and composite resins", companies: ["gc", "other"], caps: [{ product: "UPR", value: "74 KTA proxy" }, { product: "Alkyd resin", value: "58 KTA proxy" }] },
-        { id: "nylon6", stage: "downstream", x: 1530, y: 828, title: "Nylon-6 / Chip", role: "Caprolactam downstream polymer", companies: ["ube"], caps: [{ product: "Nylon-6 / chip", value: "n.d." }] },
+        { id: "nylon6", stage: "downstream", x: 1530, y: 828, title: "Nylon-6 / Chip", role: "Caprolactam downstream polymer; one UBE nylon polymer line flagged for shutdown in APIC 2025 context", companies: ["ube"], caps: [{ product: "Nylon-6 / chip", value: "n.d. / restructuring" }] },
 
         { id: "packaging", stage: "market", x: 1742, y: 100, width: 146, title: "Packaging", role: "Film, bottles, containers and flexible packaging", companies: ["gc", "scgc", "irpc", "indorama", "thai_pet", "other"], caps: [{ product: "Demand sink", value: "n.d." }] },
         { id: "construction", stage: "market", x: 1742, y: 236, width: 146, title: "Construction", role: "Pipe, profile, sheet and building products", companies: ["scgc", "tpc", "avt", "other"], caps: [{ product: "Demand sink", value: "n.d." }] },
@@ -838,6 +858,7 @@
 
       function confidenceFor(value) {
         if (!value || value.includes("n.d.")) return { key: "verify", label: "Needs verification", className: "status-verify" };
+        if (value.toLowerCase().includes("historical") || value.toLowerCase().includes("ceased") || value.toLowerCase().includes("restructuring")) return { key: "proxy", label: "Historical / restructuring", className: "status-proxy" };
         if (value.toLowerCase().includes("proxy") || value.includes("~")) return { key: "proxy", label: "Proxy", className: "status-proxy" };
         return { key: "disclosed", label: "Disclosed/public", className: "status-disclosed" };
       }
@@ -895,7 +916,7 @@
           const source = nodeById.get(sourceId);
           const target = nodeById.get(targetId);
           const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          path.setAttribute("class", "flow");
+          path.setAttribute("class", `flow stage-${target.stage}`);
           path.setAttribute("d", pathFor(source, target));
           path.setAttribute("marker-end", "url(#arrow)");
           path.dataset.source = sourceId;
