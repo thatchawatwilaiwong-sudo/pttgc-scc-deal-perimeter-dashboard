@@ -452,6 +452,26 @@
         box-shadow: 0 10px 24px rgba(0,0,0,.12);
       }
 
+      .table-toolbar {
+        display: grid;
+        grid-template-columns: 1fr 220px;
+        gap: 10px;
+        padding: 12px;
+        border-bottom: 1px solid #e2e8f0;
+        background: #f8fafc;
+      }
+
+      .table-search,
+      .table-select {
+        min-height: 36px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: white;
+        color: var(--ink);
+        padding: 0 10px;
+        font-size: 12px;
+      }
+
       table {
         width: 100%;
         border-collapse: collapse;
@@ -476,6 +496,35 @@
 
       tr.dim {
         opacity: .3;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 22px;
+        padding: 3px 7px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 900;
+        border: 1px solid #cbd5e1;
+      }
+
+      .status-disclosed {
+        background: #dcfce7;
+        color: #166534;
+        border-color: #86efac;
+      }
+
+      .status-proxy {
+        background: #fef3c7;
+        color: #92400e;
+        border-color: #fde68a;
+      }
+
+      .status-verify {
+        background: #fee2e2;
+        color: #991b1b;
+        border-color: #fecaca;
       }
 
       @media (max-width: 980px) {
@@ -585,6 +634,15 @@
         </section>
 
         <section class="table-wrap">
+          <div class="table-toolbar">
+            <input id="tableSearch" class="table-search" type="search" placeholder="Search capacity table: company, product, stage, status" />
+            <select id="confidenceFilter" class="table-select">
+              <option value="all">All confidence</option>
+              <option value="disclosed">Disclosed/public</option>
+              <option value="proxy">Proxy</option>
+              <option value="verify">Needs verification</option>
+            </select>
+          </div>
           <table>
             <thead>
               <tr>
@@ -592,6 +650,7 @@
                 <th>Product / Asset</th>
                 <th>Company</th>
                 <th>Capacity</th>
+                <th>Status</th>
                 <th>Value Chain Role</th>
               </tr>
             </thead>
@@ -718,6 +777,12 @@
         return match ? Number(match[0]) : 0;
       }
 
+      function confidenceFor(value) {
+        if (!value || value.includes("n.d.")) return { key: "verify", label: "Needs verification", className: "status-verify" };
+        if (value.toLowerCase().includes("proxy") || value.includes("~")) return { key: "proxy", label: "Proxy", className: "status-proxy" };
+        return { key: "disclosed", label: "Disclosed/public", className: "status-disclosed" };
+      }
+
       function nodeMatchesSelection(node) {
         if (!selectedCompanies.size) return true;
         return node.companies.some(c => selectedCompanies.has(c));
@@ -827,10 +892,17 @@
 
       function renderTable() {
         const body = document.getElementById("capacityTable");
+        const query = document.getElementById("tableSearch").value.trim().toLowerCase();
+        const confidenceFilter = document.getElementById("confidenceFilter").value;
         body.innerHTML = nodes.flatMap(node => node.caps.map(cap => {
+          const status = confidenceFor(cap.value);
           const dim = selectedCompanies.size && !nodeMatchesSelection(node) ? " class=\"dim\"" : "";
           const companiesText = node.companies.map(id => companyById.get(id).name).join(", ");
-          return `<tr${dim} data-node="${node.id}"><td>${stages.find(s => s.id === node.stage).name}</td><td>${node.title}<br /><span style="color:#64748b">${cap.product}</span></td><td>${companiesText}</td><td>${cap.value}</td><td>${node.role}</td></tr>`;
+          const stageName = stages.find(s => s.id === node.stage).name;
+          const searchable = `${stageName} ${node.title} ${cap.product} ${companiesText} ${cap.value} ${status.label} ${node.role}`.toLowerCase();
+          if (query && !searchable.includes(query)) return "";
+          if (confidenceFilter !== "all" && confidenceFilter !== status.key) return "";
+          return `<tr${dim} data-node="${node.id}"><td>${stageName}</td><td>${node.title}<br /><span style="color:#64748b">${cap.product}</span></td><td>${companiesText}</td><td>${cap.value}</td><td><span class="status-pill ${status.className}">${status.label}</span></td><td>${node.role}</td></tr>`;
         })).join("");
       }
 
@@ -877,6 +949,8 @@
       }
 
       document.getElementById("companySearch").addEventListener("input", renderCompanyList);
+      document.getElementById("tableSearch").addEventListener("input", renderTable);
+      document.getElementById("confidenceFilter").addEventListener("change", renderTable);
       document.getElementById("selectAllBtn").addEventListener("click", () => {
         companies.forEach(company => selectedCompanies.add(company.id));
         updateView();
