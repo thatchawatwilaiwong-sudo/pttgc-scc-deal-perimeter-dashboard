@@ -745,7 +745,11 @@
         { id: "lpg", stage: "petroleum", x: 454, y: 256, title: "LPG", role: "Cracker and fuel/feedstock pool", companies: ["ptt_gsp", "gc", "scgc"], caps: [{ product: "LPG", value: "5,580 KTA" }] },
         { id: "naphtha", stage: "petroleum", x: 454, y: 374, title: "Naphtha", role: "Liquid cracker and reformer feed", companies: ["gc", "scgc", "irpc", "top", "bcp", "bsrc", "sprc"], caps: [{ product: "Naphtha", value: "10,968 KTA" }] },
         { id: "reformate_pygas", stage: "petroleum", x: 454, y: 492, title: "Reformate / Pygas", role: "Aromatics feedstock", companies: ["gc", "top", "irpc"], caps: [{ product: "Reformate / pygas", value: "n.d." }] },
-        { id: "fuel_products", stage: "petroleum", x: 454, y: 612, title: "Fuel Products", role: "Gasoline, jet/kero, diesel, fuel oil and bitumen", companies: ["gc", "top", "bcp", "bsrc", "sprc", "irpc"], caps: [{ product: "Fuel products", value: "industry pool" }] },
+        { id: "gasoline", stage: "petroleum", x: 454, y: 610, title: "Gasoline", role: "Refinery fuel product; also linked to reformate/aromatics balance", companies: ["gc", "top", "bcp", "bsrc", "sprc", "irpc"], caps: [{ product: "Gasoline pool", value: "n.d." }] },
+        { id: "jet_kero", stage: "petroleum", x: 454, y: 708, title: "Jet / Kerosene", role: "Refinery middle distillate product", companies: ["gc", "top", "bcp", "bsrc", "sprc", "irpc"], caps: [{ product: "Jet / kero pool", value: "n.d." }] },
+        { id: "diesel", stage: "petroleum", x: 454, y: 806, title: "Diesel", role: "Refinery middle distillate product", companies: ["gc", "top", "bcp", "bsrc", "sprc", "irpc"], caps: [{ product: "Diesel pool", value: "n.d." }] },
+        { id: "fuel_oil", stage: "petroleum", x: 454, y: 904, title: "Fuel Oil", role: "Heavy refinery product and industrial fuel", companies: ["gc", "top", "bcp", "bsrc", "sprc", "irpc"], caps: [{ product: "Fuel oil pool", value: "n.d." }] },
+        { id: "bitumen", stage: "petroleum", x: 454, y: 1002, title: "Bitumen", role: "Heavy refinery product for road and construction use", companies: ["top", "bcp", "bsrc", "irpc"], caps: [{ product: "Bitumen pool", value: "n.d." }] },
 
         { id: "ethylene", stage: "monomer", x: 680, y: 44, title: "Ethylene", role: "Core olefin monomer for PE, EO/EG, VCM and styrenics", companies: ["gc", "scgc", "irpc"], caps: [{ product: "GC", value: "2,827 KTA" }, { product: "SCGC MOC", value: "1,200 KTA" }, { product: "SCGC ROC", value: "900 KTA" }, { product: "IRPC", value: "n.d." }] },
         { id: "propylene", stage: "monomer", x: 680, y: 170, title: "Propylene", role: "Core olefin monomer for PP, PO, ACN and cumene", companies: ["gc", "scgc", "irpc", "sprc"], caps: [{ product: "GC", value: "902 KTA" }, { product: "SCGC MOC", value: "850 KTA" }, { product: "SCGC ROC", value: "450 KTA" }, { product: "IRPC", value: "732 KTA" }, { product: "SPRC", value: "155 KTA" }] },
@@ -805,7 +809,12 @@
 
       const flows = [
         ["natural_gas", "gsp"], ["lng", "lng_terminals"], ["lng_terminals", "gsp"], ["crude", "gc_refinery"], ["crude", "top_refinery"], ["crude", "bcp_bsrc_refinery"], ["crude", "sprc_refinery"], ["crude", "irpc_refinery"], ["condensate", "gc_refinery"], ["imported_feed", "naphtha"], ["imported_feed", "lpg"],
-        ["gsp", "ethane"], ["gsp", "propane"], ["gsp", "lpg"], ["gc_refinery", "naphtha"], ["top_refinery", "naphtha"], ["bcp_bsrc_refinery", "fuel_products"], ["sprc_refinery", "fuel_products"], ["irpc_refinery", "naphtha"], ["gc_refinery", "reformate_pygas"], ["top_refinery", "reformate_pygas"], ["irpc_refinery", "reformate_pygas"],
+        ["gsp", "ethane"], ["gsp", "propane"], ["gsp", "lpg"], ["gc_refinery", "naphtha"], ["top_refinery", "naphtha"], ["irpc_refinery", "naphtha"], ["gc_refinery", "reformate_pygas"], ["top_refinery", "reformate_pygas"], ["irpc_refinery", "reformate_pygas"],
+        ["gc_refinery", "gasoline"], ["top_refinery", "gasoline"], ["bcp_bsrc_refinery", "gasoline"], ["sprc_refinery", "gasoline"], ["irpc_refinery", "gasoline"],
+        ["gc_refinery", "jet_kero"], ["top_refinery", "jet_kero"], ["bcp_bsrc_refinery", "jet_kero"], ["sprc_refinery", "jet_kero"], ["irpc_refinery", "jet_kero"],
+        ["gc_refinery", "diesel"], ["top_refinery", "diesel"], ["bcp_bsrc_refinery", "diesel"], ["sprc_refinery", "diesel"], ["irpc_refinery", "diesel"],
+        ["gc_refinery", "fuel_oil"], ["top_refinery", "fuel_oil"], ["bcp_bsrc_refinery", "fuel_oil"], ["sprc_refinery", "fuel_oil"], ["irpc_refinery", "fuel_oil"],
+        ["top_refinery", "bitumen"], ["bcp_bsrc_refinery", "bitumen"], ["irpc_refinery", "bitumen"],
         ["ethane", "ethylene"], ["propane", "propylene"], ["lpg", "ethylene"], ["lpg", "propylene"], ["naphtha", "ethylene"], ["naphtha", "propylene"], ["naphtha", "butadiene"], ["naphtha", "butene1"], ["naphtha", "benzene"], ["reformate_pygas", "benzene"], ["reformate_pygas", "toluene"], ["reformate_pygas", "paraxylene"], ["reformate_pygas", "orthoxylene"], ["reformate_pygas", "mixed_xylene"],
         ["ethylene", "eo_eg"], ["ethylene", "edc_vcm"], ["ethylene", "styrene"], ["ethylene", "hdpe"], ["ethylene", "lldpe"], ["ethylene", "ldpe_eva"],
         ["propylene", "pp"], ["propylene", "propylene_oxide"], ["propylene", "cumene"], ["propylene", "acn"], ["propylene", "mma"],
