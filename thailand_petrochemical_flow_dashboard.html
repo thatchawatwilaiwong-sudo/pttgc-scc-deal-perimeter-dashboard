@@ -168,8 +168,8 @@
       }
 
       .poster {
-        width: 1840px;
-        min-height: 1220px;
+        width: 1920px;
+        min-height: 1570px;
         background:
           linear-gradient(90deg,
             rgba(124,58,237,.12) 0 14%,
@@ -261,7 +261,7 @@
 
       .map {
         position: relative;
-        height: 930px;
+        height: 1250px;
       }
 
       svg {
@@ -288,14 +288,14 @@
 
       .node {
         position: absolute;
-        width: 178px;
-        min-height: 78px;
-        padding: 9px 10px;
+        width: 168px;
+        min-height: 68px;
+        padding: 8px 9px;
         background: #fff;
         border: 2px solid #334155;
         border-radius: 8px;
         box-shadow: 4px 4px 0 rgba(0,0,0,.14);
-        font-size: 11px;
+        font-size: 10.5px;
         line-height: 1.25;
         z-index: 2;
         transition: opacity .18s ease, filter .18s ease, transform .18s ease, box-shadow .18s ease, border-color .18s ease;
@@ -303,7 +303,7 @@
 
       .node h3 {
         margin: 0 0 5px;
-        font-size: 12px;
+        font-size: 11.5px;
       }
 
       .node .meta {
@@ -384,7 +384,9 @@
         position: absolute;
         left: 24px;
         bottom: 18px;
-        width: 500px;
+        width: 650px;
+        max-height: 230px;
+        overflow: auto;
         padding: 12px;
         border: 2px solid #221b17;
         background: rgba(255,255,255,.92);
@@ -395,7 +397,7 @@
 
       .legend-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 6px 10px;
         margin-top: 8px;
       }
@@ -450,7 +452,7 @@
 
       .table-wrap {
         margin-top: 16px;
-        width: 1840px;
+        width: 1920px;
         border: 2px solid #221b17;
         background: white;
         box-shadow: 0 10px 24px rgba(0,0,0,.12);
@@ -584,9 +586,9 @@
               <h2>Thailand Petroleum and Petrochemical Complex Capacity Map</h2>
               <p>Industry-wide value chain view: feedstock, refinery/GSP, olefins, aromatics, intermediates, polymers, converters and market outlets</p>
               <div class="coverage-badges">
-                <span class="coverage-badge">30 companies / groups</span>
-                <span class="coverage-badge">38 value-chain boxes</span>
-                <span class="coverage-badge">74 capacity rows</span>
+                <span id="companyCountBadge" class="coverage-badge">Company coverage</span>
+                <span id="nodeCountBadge" class="coverage-badge">Value-chain boxes</span>
+                <span id="capacityCountBadge" class="coverage-badge">Capacity rows</span>
                 <span class="coverage-badge">Company highlight + fade filter</span>
               </div>
             </div>
@@ -607,7 +609,7 @@
           </div>
 
           <div class="map" id="map">
-            <svg viewBox="0 0 1840 930" preserveAspectRatio="none" id="flowLayer">
+            <svg viewBox="0 0 1920 1250" preserveAspectRatio="none" id="flowLayer">
               <defs>
                 <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
                   <path d="M0,0 L0,6 L9,3 z" fill="#64748b"></path>
@@ -630,7 +632,7 @@
           <div class="bottom">
             <div class="summary">
               <h2>Objective</h2>
-              <p>แผนที่นี้ไม่ได้เริ่มจาก JV แต่เริ่มจาก value chain ทั้งอุตสาหกรรม เพื่อดูว่าใครอยู่ตรงไหนของ chain และ capacity ถูกวางอยู่ตรง product ใด</p>
+              <p>แผนที่นี้เริ่มจาก value chain ทั้งอุตสาหกรรม เพื่อดูว่าใครอยู่ตรงไหนของ chain และ capacity ถูกวางอยู่ตรง product ใด</p>
               <p>เมื่อเลือกบริษัทจากแถบซ้าย กล่องของบริษัทนั้นจะเด่นขึ้น ส่วนบริษัทอื่นจะ fade ลง เพื่อเทียบ footprint ของแต่ละรายได้ทันที</p>
             </div>
             <div class="summary">
@@ -678,35 +680,39 @@
 
     <script>
       const companies = [
-        { id: "ptt", name: "PTT Group / GSP", color: "#1d4ed8" },
+        { id: "ptt_lng", name: "PTT LNG / LNG terminals", color: "#0f3e99" },
+        { id: "ptt_gsp", name: "PTT Group / Gas Separation Plants", color: "#1d4ed8" },
         { id: "gc", name: "PTTGC / GC", color: "#2563eb" },
         { id: "scgc", name: "SCGC / SCC", color: "#f97316" },
         { id: "irpc", name: "IRPC", color: "#0891b2" },
         { id: "top", name: "Thai Oil / TOP", color: "#4338ca" },
-        { id: "bcp", name: "Bangchak / BSRC", color: "#16a34a" },
+        { id: "bcp", name: "Bangchak / BCP", color: "#16a34a" },
+        { id: "bsrc", name: "BSRC", color: "#15803d" },
         { id: "sprc", name: "SPRC", color: "#dc2626" },
         { id: "hmc", name: "HMC Polymers", color: "#7c3aed" },
         { id: "bst", name: "BST / C4 chain", color: "#be123c" },
-        { id: "tpx", name: "TPX / Thai Paraxylene", color: "#9333ea" },
-        { id: "tpe", name: "TPE / Thai Polyethylene", color: "#ea580c" },
+        { id: "tpx", name: "Thai Paraxylene / TPX", color: "#9333ea" },
+        { id: "tpe", name: "Thai Polyethylene / TPE", color: "#ea580c" },
         { id: "spc", name: "Siam Polyethylene / SSLC", color: "#fb923c" },
-        { id: "tpi", name: "TPI / legacy PE", color: "#94a3b8" },
+        { id: "tpi", name: "TPI / LDPE legacy", color: "#94a3b8" },
         { id: "tpc", name: "TPC / AGC Vinythai", color: "#0d9488" },
         { id: "tpc_paste", name: "TPC Paste Resin", color: "#14b8a6" },
-        { id: "avt", name: "AVT / AGC Vinythai", color: "#2dd4bf" },
-        { id: "indorama", name: "Indorama / IVL", color: "#6366f1" },
+        { id: "avt", name: "AGC Vinythai / AVT", color: "#2dd4bf" },
+        { id: "indorama", name: "Indorama Ventures / IVL", color: "#6366f1" },
+        { id: "thai_pet", name: "Thai PET Resin / IVL", color: "#2563eb" },
         { id: "covestro", name: "Covestro", color: "#65a30d" },
-        { id: "ube", name: "UBE", color: "#a16207" },
-        { id: "dow", name: "Dow / SCGC JV", color: "#f59e0b" },
+        { id: "gc_phenol", name: "GC Phenol / PTT Phenol", color: "#4f46e5" },
+        { id: "ube", name: "UBE Chemicals", color: "#a16207" },
+        { id: "dow", name: "Dow Thailand / SCGC-Dow", color: "#f59e0b" },
         { id: "dynachisso", name: "DynaChisso", color: "#ca8a04" },
         { id: "labix", name: "LABIX / LAB chain", color: "#854d0e" },
-        { id: "pttac", name: "PTTAC", color: "#0284c7" },
+        { id: "pttac", name: "PTT Acrylonitrile / PTTAC", color: "#0284c7" },
         { id: "thai_mma", name: "Thai MMA", color: "#db2777" },
-        { id: "gc_phenol", name: "GC Phenol / PTT Phenol", color: "#4f46e5" },
         { id: "tafl", name: "Thai Acrylic Fibre / TAF", color: "#c026d3" },
         { id: "thai_abs", name: "Thai ABS", color: "#059669" },
         { id: "ineos", name: "INEOS Styrolution", color: "#0f766e" },
-        { id: "thai_pet", name: "Thai PET Resin / IVL", color: "#2563eb" },
+        { id: "thai_epoxy", name: "Thai Epoxy / epoxy chain", color: "#84cc16" },
+        { id: "thai_plastic", name: "Thai Plastic & Chemicals", color: "#22c55e" },
         { id: "other", name: "Other converters / market", color: "#64748b" }
       ];
 
@@ -720,66 +726,94 @@
       ];
 
       const nodes = [
-        { id: "gas", stage: "feed", x: 36, y: 64, title: "Natural Gas / LNG", role: "Gas feedstock to GSP and gas-based crackers", companies: ["ptt"], caps: [{ product: "Gas feed", value: "n.d." }] },
-        { id: "crude", stage: "feed", x: 36, y: 178, title: "Crude / Condensate", role: "Refinery and condensate splitter feed", companies: ["gc", "top", "bcp", "sprc", "irpc"], caps: [{ product: "Crude / condensate", value: "n.d." }] },
-        { id: "import", stage: "feed", x: 36, y: 292, title: "Imported Naphtha / LPG", role: "Liquid cracker feed; critical for ROC restart economics", companies: ["scgc", "gc", "irpc"], caps: [{ product: "Import feed", value: "n.d." }] },
+        { id: "natural_gas", stage: "feed", x: 28, y: 70, title: "Natural Gas", role: "Domestic and imported gas feedstock", companies: ["ptt_gsp", "ptt_lng"], caps: [{ product: "Gas feed", value: "n.d." }] },
+        { id: "lng", stage: "feed", x: 28, y: 180, title: "LNG", role: "Imported gas feedstock into gas network", companies: ["ptt_lng"], caps: [{ product: "LNG terminal", value: "n.d." }] },
+        { id: "crude", stage: "feed", x: 28, y: 300, title: "Crude Oil", role: "Refinery feedstock", companies: ["gc", "top", "bcp", "bsrc", "sprc", "irpc"], caps: [{ product: "Crude feed", value: "n.d." }] },
+        { id: "condensate", stage: "feed", x: 28, y: 420, title: "Condensate", role: "Condensate splitter and refinery feed", companies: ["gc", "irpc"], caps: [{ product: "Condensate feed", value: "n.d." }] },
+        { id: "imported_feed", stage: "feed", x: 28, y: 540, title: "Imported Naphtha / LPG", role: "Liquid cracker and balancing feedstock", companies: ["gc", "scgc", "irpc"], caps: [{ product: "Imported feed", value: "n.d." }] },
 
-        { id: "gsp", stage: "petroleum", x: 300, y: 70, title: "Gas Separation Plants", role: "Ethane, propane, LPG and NGL supply", companies: ["ptt"], caps: [{ product: "GSP capacity", value: "~2,901 MMSCFD" }, { product: "Ethane", value: "1,774 KTA" }, { product: "Propane", value: "1,459 KTA" }, { product: "LPG", value: "5,580 KTA" }] },
-        { id: "gc_refinery", stage: "petroleum", x: 300, y: 214, title: "GC Refinery / Condensate Splitter", role: "GC naphtha, LPG and liquid feedstock support", companies: ["gc"], caps: [{ product: "Refinery / splitter", value: "280 KBD proxy" }] },
-        { id: "top_refinery", stage: "petroleum", x: 300, y: 342, title: "Thai Oil Refinery", role: "Fuel and naphtha/reformate supply base", companies: ["top"], caps: [{ product: "Refinery", value: "275 KBD" }] },
-        { id: "bcp_refinery", stage: "petroleum", x: 300, y: 470, title: "Bangchak / BSRC Refineries", role: "Fuel and liquid feedstock pool", companies: ["bcp"], caps: [{ product: "Refinery", value: "n.d." }] },
-        { id: "sprc_refinery", stage: "petroleum", x: 300, y: 598, title: "SPRC Refinery", role: "Fuel and petrochemical feedstock link", companies: ["sprc"], caps: [{ product: "Refinery", value: "175 KBD" }] },
-        { id: "irpc_refinery", stage: "petroleum", x: 300, y: 726, title: "IRPC Integrated Refinery", role: "Integrated refinery-to-petrochemical complex", companies: ["irpc"], caps: [{ product: "Refinery", value: "215 KBD" }] },
+        { id: "lng_terminals", stage: "petroleum", x: 236, y: 42, title: "LNG Receiving Terminals", role: "Regasification before transmission to GSP / end users", companies: ["ptt_lng"], caps: [{ product: "LNG receiving", value: "n.d." }] },
+        { id: "gsp", stage: "petroleum", x: 236, y: 144, title: "Gas Separation Plants", role: "Ethane, propane, LPG and NGL separation", companies: ["ptt_gsp"], caps: [{ product: "GSP capacity", value: "~2,901 MMSCFD" }] },
+        { id: "gc_refinery", stage: "petroleum", x: 236, y: 276, title: "GC Refinery / Splitter", role: "Fuel and petrochemical feedstock base", companies: ["gc"], caps: [{ product: "Refinery / splitter", value: "280 KBD proxy" }] },
+        { id: "top_refinery", stage: "petroleum", x: 236, y: 386, title: "Thai Oil Refinery", role: "Fuel and petrochemical feedstock base", companies: ["top"], caps: [{ product: "Refinery", value: "275 KBD" }] },
+        { id: "bcp_bsrc_refinery", stage: "petroleum", x: 236, y: 496, title: "Bangchak / BSRC Refineries", role: "Fuel and feedstock supply pool", companies: ["bcp", "bsrc"], caps: [{ product: "Refinery", value: "n.d." }] },
+        { id: "sprc_refinery", stage: "petroleum", x: 236, y: 606, title: "SPRC Refinery", role: "Fuel and refinery propylene base", companies: ["sprc"], caps: [{ product: "Refinery", value: "175 KBD" }] },
+        { id: "irpc_refinery", stage: "petroleum", x: 236, y: 716, title: "IRPC Integrated Refinery", role: "Integrated refinery-to-petrochemical complex", companies: ["irpc"], caps: [{ product: "Refinery", value: "215 KBD" }] },
 
-        { id: "gas_feed", stage: "petroleum", x: 540, y: 76, title: "Ethane / Propane / LPG Pool", role: "Gas-based olefins and fuel/feedstock pool", companies: ["ptt", "gc"], caps: [{ product: "Ethane", value: "1,774 KTA" }, { product: "Propane", value: "1,459 KTA" }, { product: "LPG", value: "5,580 KTA" }] },
-        { id: "liquid_feed", stage: "petroleum", x: 540, y: 260, title: "Naphtha / Reformate / Pygas", role: "Liquid cracker feed and aromatics feed", companies: ["gc", "scgc", "irpc", "top", "bcp", "sprc"], caps: [{ product: "Naphtha", value: "10,968 KTA" }, { product: "Reformate / pygas", value: "n.d." }] },
-        { id: "fuel", stage: "petroleum", x: 540, y: 560, title: "Fuel Products", role: "Gasoline, diesel, jet/kero, fuel oil, bitumen", companies: ["gc", "top", "bcp", "sprc", "irpc"], caps: [{ product: "Fuel products", value: "industry pool" }] },
+        { id: "ethane", stage: "petroleum", x: 454, y: 60, title: "Ethane", role: "Gas cracker feed into ethylene", companies: ["ptt_gsp", "gc"], caps: [{ product: "Ethane", value: "1,774 KTA" }] },
+        { id: "propane", stage: "petroleum", x: 454, y: 158, title: "Propane", role: "Gas / LPG feed and propylene route", companies: ["ptt_gsp", "gc"], caps: [{ product: "Propane", value: "1,459 KTA" }] },
+        { id: "lpg", stage: "petroleum", x: 454, y: 256, title: "LPG", role: "Cracker and fuel/feedstock pool", companies: ["ptt_gsp", "gc", "scgc"], caps: [{ product: "LPG", value: "5,580 KTA" }] },
+        { id: "naphtha", stage: "petroleum", x: 454, y: 374, title: "Naphtha", role: "Liquid cracker and reformer feed", companies: ["gc", "scgc", "irpc", "top", "bcp", "bsrc", "sprc"], caps: [{ product: "Naphtha", value: "10,968 KTA" }] },
+        { id: "reformate_pygas", stage: "petroleum", x: 454, y: 492, title: "Reformate / Pygas", role: "Aromatics feedstock", companies: ["gc", "top", "irpc"], caps: [{ product: "Reformate / pygas", value: "n.d." }] },
+        { id: "fuel_products", stage: "petroleum", x: 454, y: 612, title: "Fuel Products", role: "Gasoline, jet/kero, diesel, fuel oil and bitumen", companies: ["gc", "top", "bcp", "bsrc", "sprc", "irpc"], caps: [{ product: "Fuel products", value: "industry pool" }] },
 
-        { id: "gc_olefins", stage: "monomer", x: 780, y: 58, title: "GC Olefins Platform", role: "PTTGC monomer source", companies: ["gc"], caps: [{ product: "Ethylene", value: "2,827 KTA" }, { product: "Propylene", value: "902 KTA" }, { product: "Butadiene", value: "75 KTA" }, { product: "Butene-1", value: "25 KTA" }] },
-        { id: "moc", stage: "monomer", x: 780, y: 188, title: "SCGC MOC", role: "Running Thai olefins base", companies: ["scgc"], caps: [{ product: "Ethylene", value: "1,200 KTA" }, { product: "Propylene", value: "850 KTA" }] },
-        { id: "roc", stage: "monomer", x: 780, y: 316, title: "SCGC ROC", role: "Restart / transfer decision point", companies: ["scgc"], caps: [{ product: "Ethylene", value: "900 KTA" }, { product: "Propylene", value: "450 KTA" }] },
-        { id: "irpc_olefins", stage: "monomer", x: 780, y: 444, title: "IRPC Olefins", role: "Integrated olefins within IRPC complex", companies: ["irpc"], caps: [{ product: "Propylene", value: "732 KTA" }, { product: "Ethylene", value: "n.d." }] },
-        { id: "sprc_propylene", stage: "monomer", x: 780, y: 572, title: "SPRC Propylene", role: "Refinery propylene pool", companies: ["sprc"], caps: [{ product: "Propylene", value: "155 KTA" }] },
+        { id: "ethylene", stage: "monomer", x: 680, y: 44, title: "Ethylene", role: "Core olefin monomer for PE, EO/EG, VCM and styrenics", companies: ["gc", "scgc", "irpc"], caps: [{ product: "GC", value: "2,827 KTA" }, { product: "SCGC MOC", value: "1,200 KTA" }, { product: "SCGC ROC", value: "900 KTA" }, { product: "IRPC", value: "n.d." }] },
+        { id: "propylene", stage: "monomer", x: 680, y: 170, title: "Propylene", role: "Core olefin monomer for PP, PO, ACN and cumene", companies: ["gc", "scgc", "irpc", "sprc"], caps: [{ product: "GC", value: "902 KTA" }, { product: "SCGC MOC", value: "850 KTA" }, { product: "SCGC ROC", value: "450 KTA" }, { product: "IRPC", value: "732 KTA" }, { product: "SPRC", value: "155 KTA" }] },
+        { id: "butadiene", stage: "monomer", x: 680, y: 308, title: "Butadiene", role: "C4 monomer for synthetic rubber and ABS", companies: ["gc", "bst", "irpc"], caps: [{ product: "GC", value: "75 KTA" }, { product: "BST / others", value: "n.d." }] },
+        { id: "butene1", stage: "monomer", x: 680, y: 426, title: "Butene-1", role: "Comonomer for LLDPE/HDPE and C4 chain", companies: ["gc", "bst"], caps: [{ product: "GC", value: "25 KTA" }] },
 
-        { id: "gc_aromatics", stage: "monomer", x: 1000, y: 62, title: "GC Aromatics Platform", role: "PX, benzene, toluene, mixed xylenes", companies: ["gc"], caps: [{ product: "Aromatics", value: "2,419 KTA proxy" }] },
-        { id: "tpx_aromatics", stage: "monomer", x: 1000, y: 182, title: "Thai Paraxylene / TPX", role: "PX and aromatics chain", companies: ["tpx", "ptt"], caps: [{ product: "PX / aromatics", value: "n.d." }] },
-        { id: "irpc_aromatics", stage: "monomer", x: 1000, y: 302, title: "IRPC Aromatics", role: "Benzene, toluene, mixed xylenes and related products", companies: ["irpc"], caps: [{ product: "Aromatics", value: "n.d." }] },
-        { id: "c4_pool", stage: "monomer", x: 1000, y: 548, title: "C4 / Butadiene Pool", role: "Butadiene, butene-1, synthetic rubber feedstock", companies: ["gc", "bst", "irpc"], caps: [{ product: "GC BD", value: "75 KTA" }, { product: "GC Butene-1", value: "25 KTA" }] },
+        { id: "benzene", stage: "monomer", x: 884, y: 46, title: "Benzene", role: "Feedstock for cumene, styrene and phenol/BPA chain", companies: ["gc", "tpx", "irpc"], caps: [{ product: "Benzene", value: "475 KTA proxy" }] },
+        { id: "toluene", stage: "monomer", x: 884, y: 164, title: "Toluene", role: "Solvent and aromatics conversion feed", companies: ["gc", "tpx", "irpc"], caps: [{ product: "Toluene", value: "532 KTA proxy" }] },
+        { id: "paraxylene", stage: "monomer", x: 884, y: 282, title: "Para-xylene", role: "PX route into PTA and PET", companies: ["gc", "tpx"], caps: [{ product: "PX", value: "1,800 KTA proxy" }] },
+        { id: "orthoxylene", stage: "monomer", x: 884, y: 400, title: "Ortho-xylene", role: "OX route into PA / plasticizers", companies: ["gc", "tpx"], caps: [{ product: "OX", value: "85 KTA proxy" }] },
+        { id: "mixed_xylene", stage: "monomer", x: 884, y: 518, title: "Mixed Xylenes", role: "Aromatics balancing and isomerization feed", companies: ["gc", "tpx", "irpc"], caps: [{ product: "Mixed xylene", value: "395 KTA proxy" }] },
 
-        { id: "ethylene_outlets", stage: "intermediate", x: 1228, y: 82, title: "Ethylene Outlets", role: "PE, VCM/PVC, EO/EG and merchant ethylene", companies: ["gc", "scgc", "irpc", "tpe", "spc", "tpi", "tpc"], caps: [{ product: "Ethylene supply shown", value: "4,927 KTA GC+SCGC" }] },
-        { id: "propylene_outlets", stage: "intermediate", x: 1228, y: 244, title: "Propylene Outlets", role: "PP, PO/polyols, acrylonitrile and merchant propylene", companies: ["gc", "scgc", "irpc", "hmc", "sprc", "pttac", "thai_mma"], caps: [{ product: "Propylene supply shown", value: "3,544 KTA proxy" }] },
-        { id: "aromatics_derivatives", stage: "intermediate", x: 1228, y: 406, title: "Aromatics Derivatives", role: "PX/PTA/PET, benzene/phenol/BPA, solvents", companies: ["gc", "tpx", "indorama", "covestro", "gc_phenol", "thai_pet"], caps: [{ product: "PTA / PET / phenol / BPA", value: "n.d." }] },
-        { id: "vinyl_chain", stage: "intermediate", x: 1228, y: 568, title: "Vinyl Chain", role: "VCM, PVC, caustic soda and PVC compounds", companies: ["scgc", "tpc", "tpc_paste", "avt"], caps: [{ product: "VCM / PVC chain", value: "1,686 KTA SCGC proxy" }, { product: "TPC PVC", value: "530 KTA" }, { product: "TPC Paste", value: "36 KTA proxy" }, { product: "AVT", value: "330 KTA proxy" }] },
-        { id: "phenol_bpa_chain", stage: "intermediate", x: 1228, y: 656, title: "Phenol / BPA / Epoxy Chain", role: "Phenol, acetone, BPA and epoxy resin route into PC/epoxy/end-use chemicals", companies: ["gc_phenol", "covestro", "gc"], caps: [{ product: "Phenol", value: "492 KTA proxy" }, { product: "Acetone", value: "304 KTA proxy" }, { product: "BPA", value: "532 KTA proxy" }] },
-        { id: "c4_derivatives", stage: "intermediate", x: 1228, y: 760, title: "C4 / Specialty Derivatives", role: "Butadiene, synthetic rubber, MMA, caprolactam and specialty chemicals", companies: ["gc", "bst", "ube", "thai_mma"], caps: [{ product: "BD / C4 derivatives", value: "n.d." }, { product: "Caprolactam", value: "130 KTA proxy" }] },
-        { id: "acn_mma_chain", stage: "intermediate", x: 1228, y: 844, title: "ACN / MMA / Acrylic Chain", role: "Acrylonitrile, methyl methacrylate and acrylic fiber route", companies: ["pttac", "thai_mma", "tafl"], caps: [{ product: "ACN", value: "200 KTA proxy" }, { product: "MMA", value: "275 KTA proxy" }, { product: "Acrylic fiber", value: "154 KTA proxy" }] },
+        { id: "eo_eg", stage: "intermediate", x: 1088, y: 26, title: "EO / EG", role: "Ethylene oxide and ethylene glycol route", companies: ["gc", "scgc", "dow"], caps: [{ product: "EO/EG chain", value: "n.d." }] },
+        { id: "edc_vcm", stage: "intermediate", x: 1088, y: 120, title: "EDC / VCM", role: "Vinyl chloride route into PVC", companies: ["scgc", "tpc", "avt"], caps: [{ product: "VCM / EDC", value: "n.d." }] },
+        { id: "styrene", stage: "intermediate", x: 1088, y: 214, title: "Styrene Monomer", role: "Benzene/ethylene route into PS, EPS, ABS and SAN", companies: ["irpc", "ineos"], caps: [{ product: "SM", value: "580 KTA proxy" }] },
+        { id: "propylene_oxide", stage: "intermediate", x: 1088, y: 308, title: "Propylene Oxide", role: "PO route into polyols and specialty chemicals", companies: ["dow", "scgc"], caps: [{ product: "PO", value: "670 KTA proxy" }] },
+        { id: "cumene", stage: "intermediate", x: 1088, y: 402, title: "Cumene", role: "Benzene/propylene intermediate for phenol and acetone", companies: ["gc_phenol", "gc"], caps: [{ product: "Cumene", value: "635 KTA proxy" }] },
+        { id: "phenol", stage: "intermediate", x: 1088, y: 496, title: "Phenol", role: "Phenol route into BPA, phenolic resin and caprolactam chain", companies: ["gc_phenol", "gc"], caps: [{ product: "Phenol", value: "492 KTA proxy" }] },
+        { id: "acetone", stage: "intermediate", x: 1088, y: 590, title: "Acetone", role: "Co-product route into MMA and solvents", companies: ["gc_phenol", "gc"], caps: [{ product: "Acetone", value: "304 KTA proxy" }] },
+        { id: "bpa", stage: "intermediate", x: 1088, y: 684, title: "BPA", role: "Bisphenol-A route into PC and epoxy resin", companies: ["covestro", "gc_phenol"], caps: [{ product: "BPA", value: "532 KTA proxy" }] },
+        { id: "pta", stage: "intermediate", x: 1088, y: 778, title: "PTA", role: "PX derivative into PET resin and polyester", companies: ["indorama", "gc"], caps: [{ product: "PTA", value: "1,400 KTA proxy" }] },
+        { id: "pa", stage: "intermediate", x: 1088, y: 872, title: "PA", role: "Phthalic anhydride route into plasticizers / alkyd resin", companies: ["gc"], caps: [{ product: "PA", value: "50 KTA proxy" }] },
+        { id: "acn", stage: "intermediate", x: 1088, y: 966, title: "Acrylonitrile", role: "ACN route into acrylic fiber, ABS/SAN and nitrile chain", companies: ["pttac"], caps: [{ product: "ACN", value: "200 KTA proxy" }] },
+        { id: "mma", stage: "intermediate", x: 1088, y: 1060, title: "MMA / MAA", role: "Methyl methacrylate route into PMMA and acrylic sheet", companies: ["thai_mma"], caps: [{ product: "MMA", value: "275 KTA proxy" }, { product: "MAA", value: "28 KTA proxy" }] },
+        { id: "caprolactam", stage: "intermediate", x: 1088, y: 1154, title: "Caprolactam", role: "Cyclohexane / benzene derivative into nylon-6", companies: ["ube"], caps: [{ product: "Caprolactam", value: "130 KTA proxy" }] },
 
-        { id: "gc_pe", stage: "downstream", x: 1470, y: 50, title: "GC PE", role: "GC direct PE outlet for ethylene", companies: ["gc"], caps: [{ product: "LDPE/EVA", value: "300 KTA" }, { product: "LLDPE", value: "800 KTA" }, { product: "HDPE", value: "850 KTA" }, { product: "Total PE", value: "1,950 KTA" }] },
-        { id: "scgc_pepp", stage: "downstream", x: 1470, y: 180, title: "SCGC Thai PE / PP", role: "SCGC downstream polyolefins base in Thailand", companies: ["scgc", "tpe", "spc", "tpi"], caps: [{ product: "TPE PE", value: "1,270 KTA" }, { product: "Siam PE / SSLC", value: "980 KTA proxy" }, { product: "TPI LDPE", value: "156 KTA proxy" }, { product: "SCGC PP", value: "860 KTA" }] },
-        { id: "irpc_polymer", stage: "downstream", x: 1470, y: 310, title: "IRPC PE / PP / ABS", role: "Integrated downstream polymers", companies: ["irpc"], caps: [{ product: "HDPE", value: "140 KTA" }, { product: "PP", value: "732 KTA" }, { product: "ABS/SAN", value: "n.d." }] },
-        { id: "hmc_pp", stage: "downstream", x: 1470, y: 440, title: "HMC Polymers", role: "PP producer; PTTGC associate exposure", companies: ["hmc", "gc"], caps: [{ product: "PP", value: "1,060 KTA" }, { product: "PTTGC stake", value: "~41%" }] },
-        { id: "pvc_pet", stage: "downstream", x: 1470, y: 570, title: "PVC / PET / Engineering Resins", role: "PVC, PET, PC, ABS/SAN and other downstream resins", companies: ["tpc", "tpc_paste", "avt", "indorama", "covestro", "scgc", "thai_pet"], caps: [{ product: "PVC", value: "896 KTA proxy" }, { product: "PET resin", value: "n.d." }, { product: "PC", value: "497 KTA proxy" }] },
-        { id: "specialty", stage: "downstream", x: 1470, y: 700, title: "Compounds / Specialty Chemicals", role: "Compounds, polyols, MMA, caprolactam, specialty additives", companies: ["gc", "scgc", "dow", "ube", "bst", "thai_mma", "pttac", "dynachisso", "labix"], caps: [{ product: "DynaChisso compound", value: "30 KTA proxy" }, { product: "LAB", value: "120 KTA proxy" }, { product: "Polyols", value: "370 KTA proxy" }] },
-        { id: "abs_san_ps", stage: "downstream", x: 1470, y: 828, title: "ABS / SAN / PS / PMMA", role: "Styrenics and acrylic resins used in auto parts, appliances, electronics and sheet applications", companies: ["irpc", "thai_abs", "ineos", "thai_mma"], caps: [{ product: "ABS/SAN", value: "154 KTA proxy" }, { product: "PMMA", value: "13 KTA proxy" }, { product: "PS", value: "365 KTA proxy" }] },
+        { id: "hdpe", stage: "downstream", x: 1320, y: 28, title: "HDPE", role: "Rigid packaging, pipe and industrial resin", companies: ["gc", "scgc", "irpc"], caps: [{ product: "GC HDPE", value: "850 KTA" }, { product: "SCGC/TPE HDPE", value: "n.d." }, { product: "IRPC HDPE", value: "140 KTA" }] },
+        { id: "lldpe", stage: "downstream", x: 1320, y: 122, title: "LLDPE", role: "Film and packaging resin", companies: ["gc", "scgc", "tpe", "spc"], caps: [{ product: "GC LLDPE", value: "800 KTA" }, { product: "SCGC/TPE/SSLC", value: "n.d." }] },
+        { id: "ldpe_eva", stage: "downstream", x: 1320, y: 216, title: "LDPE / EVA", role: "Flexible packaging, coating and specialty film", companies: ["gc", "tpi", "scgc"], caps: [{ product: "GC LDPE/EVA", value: "300 KTA" }, { product: "TPI LDPE", value: "156 KTA proxy" }] },
+        { id: "pp", stage: "downstream", x: 1320, y: 310, title: "PP", role: "Polypropylene for packaging, auto and consumer goods", companies: ["scgc", "irpc", "hmc", "gc"], caps: [{ product: "SCGC PP", value: "860 KTA" }, { product: "IRPC PP", value: "732 KTA" }, { product: "HMC PP", value: "1,060 KTA" }] },
+        { id: "pvc", stage: "downstream", x: 1320, y: 404, title: "PVC", role: "Pipe, building products and compounds", companies: ["scgc", "tpc", "tpc_paste", "avt", "thai_plastic"], caps: [{ product: "TPC PVC", value: "530 KTA" }, { product: "TPC Paste", value: "36 KTA proxy" }, { product: "AVT", value: "330 KTA proxy" }] },
+        { id: "pet", stage: "downstream", x: 1320, y: 498, title: "PET Resin", role: "Bottle, packaging and polyester chain", companies: ["indorama", "thai_pet"], caps: [{ product: "PET", value: "n.d." }] },
+        { id: "pc", stage: "downstream", x: 1320, y: 592, title: "Polycarbonate / PC", role: "Engineering resin from BPA", companies: ["covestro"], caps: [{ product: "PC", value: "497 KTA proxy" }] },
+        { id: "phenolic_resin", stage: "downstream", x: 1320, y: 686, title: "Phenolic Resin", role: "Phenol derivative used in industrial resins", companies: ["gc_phenol"], caps: [{ product: "Phenolic resin", value: "n.d." }] },
+        { id: "epoxy", stage: "downstream", x: 1320, y: 780, title: "Epoxy Resin", role: "BPA derivative into coatings, electronics and adhesives", companies: ["thai_epoxy", "covestro"], caps: [{ product: "Epoxy", value: "n.d." }] },
+        { id: "abs_san", stage: "downstream", x: 1320, y: 874, title: "ABS / SAN", role: "ACN, butadiene and styrene derivative", companies: ["thai_abs", "irpc", "ineos"], caps: [{ product: "ABS/SAN", value: "154 KTA proxy" }] },
+        { id: "ps_eps", stage: "downstream", x: 1320, y: 968, title: "PS / EPS", role: "Styrenics for packaging, appliance and insulation", companies: ["ineos", "irpc"], caps: [{ product: "PS", value: "365 KTA proxy" }, { product: "EPS", value: "129 KTA proxy" }] },
+        { id: "pmma", stage: "downstream", x: 1320, y: 1062, title: "PMMA", role: "Acrylic sheet and optical resin", companies: ["thai_mma"], caps: [{ product: "PMMA", value: "13 KTA proxy" }] },
+        { id: "acrylic_fiber", stage: "downstream", x: 1320, y: 1156, title: "Acrylic Fiber", role: "ACN downstream fiber", companies: ["tafl"], caps: [{ product: "Acrylic fiber", value: "154 KTA proxy" }] },
 
-        { id: "domestic_market", stage: "market", x: 1668, y: 128, width: 150, title: "Domestic Customers", role: "Packaging, construction, automotive, consumer and industrial demand", companies: ["other", "gc", "scgc", "irpc"], caps: [{ product: "Demand sink", value: "n.d." }] },
-        { id: "export_market", stage: "market", x: 1668, y: 354, width: 150, title: "Export Market", role: "Regional balancing for resin, monomer and intermediates", companies: ["other", "gc", "scgc", "irpc"], caps: [{ product: "Export sink", value: "n.d." }] },
-        { id: "converters", stage: "market", x: 1668, y: 580, width: 150, title: "Converters / Brand Owners", role: "Films, bottles, pipes, fibers, auto parts, packaging", companies: ["other", "tafl", "thai_abs", "ineos", "thai_pet"], caps: [{ product: "Conversion capacity", value: "n.d." }] }
+        { id: "polyols", stage: "downstream", x: 1530, y: 72, title: "Polyols", role: "PO derivative for polyurethane chain", companies: ["dow", "scgc"], caps: [{ product: "Polyols", value: "370 KTA proxy" }] },
+        { id: "synthetic_rubber", stage: "downstream", x: 1530, y: 180, title: "Synthetic Rubber", role: "Butadiene downstream elastomers", companies: ["bst"], caps: [{ product: "Synthetic rubber", value: "n.d." }] },
+        { id: "compounds", stage: "downstream", x: 1530, y: 288, title: "Polymer Compounds", role: "PE/PP/PVC compounds and specialty grades", companies: ["scgc", "dynachisso", "irpc", "other"], caps: [{ product: "DynaChisso compound", value: "30 KTA proxy" }] },
+        { id: "bopp", stage: "downstream", x: 1530, y: 396, title: "BOPP Film", role: "PP film route into packaging", companies: ["scgc", "other"], caps: [{ product: "BOPP", value: "n.d." }] },
+        { id: "plasticizers", stage: "downstream", x: 1530, y: 504, title: "Plasticizers", role: "PA/OX derivative for flexible PVC", companies: ["gc", "other"], caps: [{ product: "Plasticizers", value: "n.d." }] },
+        { id: "lab", stage: "downstream", x: 1530, y: 612, title: "LAB", role: "Detergent intermediate chain", companies: ["labix"], caps: [{ product: "LAB", value: "120 KTA proxy" }] },
+        { id: "alkyd_upr", stage: "downstream", x: 1530, y: 720, title: "Alkyd / UPR Resin", role: "PA derivative into coating and composite resins", companies: ["gc", "other"], caps: [{ product: "UPR", value: "74 KTA proxy" }, { product: "Alkyd resin", value: "58 KTA proxy" }] },
+        { id: "nylon6", stage: "downstream", x: 1530, y: 828, title: "Nylon-6 / Chip", role: "Caprolactam downstream polymer", companies: ["ube"], caps: [{ product: "Nylon-6 / chip", value: "n.d." }] },
+
+        { id: "packaging", stage: "market", x: 1742, y: 100, width: 146, title: "Packaging", role: "Film, bottles, containers and flexible packaging", companies: ["gc", "scgc", "irpc", "indorama", "thai_pet", "other"], caps: [{ product: "Demand sink", value: "n.d." }] },
+        { id: "construction", stage: "market", x: 1742, y: 236, width: 146, title: "Construction", role: "Pipe, profile, sheet and building products", companies: ["scgc", "tpc", "avt", "other"], caps: [{ product: "Demand sink", value: "n.d." }] },
+        { id: "automotive", stage: "market", x: 1742, y: 372, width: 146, title: "Automotive", role: "PP, ABS, PC and compounds", companies: ["hmc", "irpc", "thai_abs", "covestro", "other"], caps: [{ product: "Demand sink", value: "n.d." }] },
+        { id: "consumer", stage: "market", x: 1742, y: 508, width: 146, title: "Consumer / Appliance", role: "ABS, PS, PP, PC and PMMA outlets", companies: ["thai_abs", "ineos", "covestro", "thai_mma", "other"], caps: [{ product: "Demand sink", value: "n.d." }] },
+        { id: "textile_fiber", stage: "market", x: 1742, y: 644, width: 146, title: "Textile / Fiber", role: "PET, acrylic fiber and nylon outlets", companies: ["indorama", "tafl", "ube", "other"], caps: [{ product: "Demand sink", value: "n.d." }] },
+        { id: "export_market", stage: "market", x: 1742, y: 780, width: 146, title: "Export / Merchant", role: "Regional balancing for monomers, polymers and intermediates", companies: ["gc", "scgc", "irpc", "indorama", "other"], caps: [{ product: "Export sink", value: "n.d." }] }
       ];
 
       const flows = [
-        ["gas", "gsp"], ["crude", "gc_refinery"], ["crude", "top_refinery"], ["crude", "bcp_refinery"], ["crude", "sprc_refinery"], ["crude", "irpc_refinery"],
-        ["import", "liquid_feed"], ["gsp", "gas_feed"], ["gc_refinery", "liquid_feed"], ["top_refinery", "liquid_feed"], ["bcp_refinery", "fuel"], ["sprc_refinery", "fuel"], ["irpc_refinery", "liquid_feed"],
-        ["gas_feed", "gc_olefins"], ["liquid_feed", "moc"], ["liquid_feed", "roc"], ["liquid_feed", "irpc_olefins"], ["sprc_refinery", "sprc_propylene"],
-        ["liquid_feed", "gc_aromatics"], ["liquid_feed", "tpx_aromatics"], ["liquid_feed", "irpc_aromatics"], ["gc_olefins", "c4_pool"],
-        ["gc_olefins", "ethylene_outlets"], ["moc", "ethylene_outlets"], ["roc", "ethylene_outlets"], ["irpc_olefins", "ethylene_outlets"],
-        ["gc_olefins", "propylene_outlets"], ["moc", "propylene_outlets"], ["roc", "propylene_outlets"], ["irpc_olefins", "propylene_outlets"], ["sprc_propylene", "propylene_outlets"],
-        ["gc_aromatics", "aromatics_derivatives"], ["tpx_aromatics", "aromatics_derivatives"], ["irpc_aromatics", "aromatics_derivatives"], ["c4_pool", "c4_derivatives"],
-        ["ethylene_outlets", "gc_pe"], ["ethylene_outlets", "scgc_pepp"], ["ethylene_outlets", "irpc_polymer"], ["ethylene_outlets", "vinyl_chain"],
-        ["propylene_outlets", "scgc_pepp"], ["propylene_outlets", "irpc_polymer"], ["propylene_outlets", "hmc_pp"], ["propylene_outlets", "specialty"], ["propylene_outlets", "acn_mma_chain"],
-        ["aromatics_derivatives", "pvc_pet"], ["aromatics_derivatives", "phenol_bpa_chain"], ["vinyl_chain", "pvc_pet"], ["c4_derivatives", "specialty"], ["phenol_bpa_chain", "pvc_pet"], ["acn_mma_chain", "abs_san_ps"],
-        ["gc_pe", "domestic_market"], ["scgc_pepp", "domestic_market"], ["irpc_polymer", "domestic_market"], ["hmc_pp", "domestic_market"], ["pvc_pet", "domestic_market"], ["specialty", "domestic_market"], ["abs_san_ps", "domestic_market"],
-        ["gc_pe", "export_market"], ["scgc_pepp", "export_market"], ["irpc_polymer", "export_market"], ["pvc_pet", "export_market"], ["abs_san_ps", "export_market"], ["domestic_market", "converters"]
+        ["natural_gas", "gsp"], ["lng", "lng_terminals"], ["lng_terminals", "gsp"], ["crude", "gc_refinery"], ["crude", "top_refinery"], ["crude", "bcp_bsrc_refinery"], ["crude", "sprc_refinery"], ["crude", "irpc_refinery"], ["condensate", "gc_refinery"], ["imported_feed", "naphtha"], ["imported_feed", "lpg"],
+        ["gsp", "ethane"], ["gsp", "propane"], ["gsp", "lpg"], ["gc_refinery", "naphtha"], ["top_refinery", "naphtha"], ["bcp_bsrc_refinery", "fuel_products"], ["sprc_refinery", "fuel_products"], ["irpc_refinery", "naphtha"], ["gc_refinery", "reformate_pygas"], ["top_refinery", "reformate_pygas"], ["irpc_refinery", "reformate_pygas"],
+        ["ethane", "ethylene"], ["propane", "propylene"], ["lpg", "ethylene"], ["lpg", "propylene"], ["naphtha", "ethylene"], ["naphtha", "propylene"], ["naphtha", "butadiene"], ["naphtha", "butene1"], ["naphtha", "benzene"], ["reformate_pygas", "benzene"], ["reformate_pygas", "toluene"], ["reformate_pygas", "paraxylene"], ["reformate_pygas", "orthoxylene"], ["reformate_pygas", "mixed_xylene"],
+        ["ethylene", "eo_eg"], ["ethylene", "edc_vcm"], ["ethylene", "styrene"], ["ethylene", "hdpe"], ["ethylene", "lldpe"], ["ethylene", "ldpe_eva"],
+        ["propylene", "pp"], ["propylene", "propylene_oxide"], ["propylene", "cumene"], ["propylene", "acn"], ["propylene", "mma"],
+        ["benzene", "styrene"], ["benzene", "cumene"], ["benzene", "caprolactam"], ["toluene", "benzene"], ["paraxylene", "pta"], ["orthoxylene", "pa"], ["mixed_xylene", "paraxylene"],
+        ["butadiene", "synthetic_rubber"], ["butadiene", "abs_san"], ["butene1", "lldpe"],
+        ["eo_eg", "pet"], ["edc_vcm", "pvc"], ["styrene", "abs_san"], ["styrene", "ps_eps"], ["propylene_oxide", "polyols"], ["cumene", "phenol"], ["cumene", "acetone"], ["phenol", "bpa"], ["phenol", "phenolic_resin"], ["acetone", "mma"], ["bpa", "pc"], ["bpa", "epoxy"], ["pta", "pet"], ["pa", "plasticizers"], ["pa", "alkyd_upr"], ["acn", "abs_san"], ["acn", "acrylic_fiber"], ["mma", "pmma"], ["caprolactam", "nylon6"],
+        ["hdpe", "packaging"], ["hdpe", "construction"], ["lldpe", "packaging"], ["ldpe_eva", "packaging"], ["pp", "packaging"], ["pp", "automotive"], ["pp", "bopp"], ["pvc", "construction"], ["pet", "packaging"], ["pet", "textile_fiber"], ["pc", "automotive"], ["pc", "consumer"], ["phenolic_resin", "consumer"], ["epoxy", "consumer"], ["abs_san", "automotive"], ["abs_san", "consumer"], ["ps_eps", "consumer"], ["pmma", "consumer"], ["acrylic_fiber", "textile_fiber"], ["polyols", "automotive"], ["synthetic_rubber", "automotive"], ["compounds", "automotive"], ["bopp", "packaging"], ["plasticizers", "construction"], ["lab", "consumer"], ["alkyd_upr", "construction"], ["nylon6", "textile_fiber"],
+        ["hdpe", "export_market"], ["lldpe", "export_market"], ["ldpe_eva", "export_market"], ["pp", "export_market"], ["pvc", "export_market"], ["pet", "export_market"], ["abs_san", "export_market"], ["ps_eps", "export_market"], ["pc", "export_market"]
       ];
 
       const companyById = new Map(companies.map(c => [c.id, c]));
@@ -903,7 +937,14 @@
 
       function renderLegend() {
         const root = document.getElementById("legendGrid");
-        root.innerHTML = companies.slice(0, 12).map(c => `<div class="legend-row"><span class="swatch" style="background:${c.color}"></span>${c.name}</div>`).join("");
+        root.innerHTML = companies.map(c => `<div class="legend-row"><span class="swatch" style="background:${c.color}"></span>${c.name}</div>`).join("");
+      }
+
+      function renderCoverageBadges() {
+        const capacityRows = nodes.reduce((sum, node) => sum + node.caps.length, 0);
+        document.getElementById("companyCountBadge").textContent = `${companies.length} companies / groups`;
+        document.getElementById("nodeCountBadge").textContent = `${nodes.length} value-chain boxes`;
+        document.getElementById("capacityCountBadge").textContent = `${capacityRows} capacity rows`;
       }
 
       function renderTable() {
@@ -986,6 +1027,7 @@
       renderFlows();
       renderStageFilter();
       renderLegend();
+      renderCoverageBadges();
       updateView();
     </script>
   </body>
