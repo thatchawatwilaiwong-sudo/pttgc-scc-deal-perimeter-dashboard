@@ -366,6 +366,10 @@
         display: none;
       }
 
+      .node.selection-hidden {
+        display: none;
+      }
+
       .link-label {
         position: absolute;
         padding: 3px 6px;
@@ -498,6 +502,10 @@
         opacity: .3;
       }
 
+      tr.selection-hidden {
+        display: none;
+      }
+
       .status-pill {
         display: inline-flex;
         align-items: center;
@@ -546,6 +554,14 @@
         <div class="control-row">
           <button id="selectAllBtn" type="button">Select All</button>
           <button id="clearBtn" type="button">Clear</button>
+        </div>
+
+        <div class="stats">
+          <h2>View Mode</h2>
+          <select id="viewMode" class="table-select" style="width:100%">
+            <option value="highlight">Highlight selected and fade others</option>
+            <option value="selected-only">Selected companies only</option>
+          </select>
         </div>
 
         <div class="stats">
@@ -894,8 +910,10 @@
         const body = document.getElementById("capacityTable");
         const query = document.getElementById("tableSearch").value.trim().toLowerCase();
         const confidenceFilter = document.getElementById("confidenceFilter").value;
+        const selectedOnly = document.getElementById("viewMode").value === "selected-only" && selectedCompanies.size > 0;
         body.innerHTML = nodes.flatMap(node => node.caps.map(cap => {
           const status = confidenceFor(cap.value);
+          if (selectedOnly && !nodeMatchesSelection(node)) return "";
           const dim = selectedCompanies.size && !nodeMatchesSelection(node) ? " class=\"dim\"" : "";
           const companiesText = node.companies.map(id => companyById.get(id).name).join(", ");
           const stageName = stages.find(s => s.id === node.stage).name;
@@ -924,13 +942,15 @@
       }
 
       function updateView() {
+        const selectedOnly = document.getElementById("viewMode").value === "selected-only" && selectedCompanies.size > 0;
         document.querySelectorAll(".node").forEach(el => {
           const node = nodeById.get(el.dataset.id);
           const selectedMatch = nodeMatchesSelection(node);
           const stageVisible = nodeVisibleByStage(node);
           el.classList.toggle("highlight", selectedCompanies.size > 0 && selectedMatch && stageVisible);
-          el.classList.toggle("dim", selectedCompanies.size > 0 && !selectedMatch && stageVisible);
+          el.classList.toggle("dim", selectedCompanies.size > 0 && !selectedMatch && stageVisible && !selectedOnly);
           el.classList.toggle("stage-hidden", !stageVisible);
+          el.classList.toggle("selection-hidden", selectedOnly && !selectedMatch);
         });
 
         document.querySelectorAll(".flow").forEach(path => {
@@ -938,9 +958,10 @@
           const target = nodeById.get(path.dataset.target);
           const stageVisible = nodeVisibleByStage(source) && nodeVisibleByStage(target);
           const selectedMatch = nodeMatchesSelection(source) || nodeMatchesSelection(target);
-          path.style.display = stageVisible ? "" : "none";
+          const visibleInSelectedOnly = !selectedOnly || (nodeMatchesSelection(source) && nodeMatchesSelection(target));
+          path.style.display = stageVisible && visibleInSelectedOnly ? "" : "none";
           path.classList.toggle("active", selectedCompanies.size > 0 && selectedMatch);
-          path.style.opacity = selectedCompanies.size && !selectedMatch ? ".12" : "";
+          path.style.opacity = selectedCompanies.size && !selectedMatch && !selectedOnly ? ".12" : "";
         });
 
         renderCompanyList();
@@ -951,6 +972,7 @@
       document.getElementById("companySearch").addEventListener("input", renderCompanyList);
       document.getElementById("tableSearch").addEventListener("input", renderTable);
       document.getElementById("confidenceFilter").addEventListener("change", renderTable);
+      document.getElementById("viewMode").addEventListener("change", updateView);
       document.getElementById("selectAllBtn").addEventListener("click", () => {
         companies.forEach(company => selectedCompanies.add(company.id));
         updateView();
