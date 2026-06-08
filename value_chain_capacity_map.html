@@ -964,13 +964,13 @@
               <div class="parent-flow gc-parent">
                 <div class="parent-flow-title"><span>PTTGC before JV</span><span>Standalone footprint</span></div>
                 <div class="flow-steps">
-                  <div class="flow-box">
+                  <div class="flow-box" id="preGcEthSupplyBox">
                     <span>Ethylene supply</span>
                     <b id="preGcEthSupply">-</b>
                     <small>GC olefins platform</small>
                   </div>
                   <div class="arrow"></div>
-                  <div class="flow-box">
+                  <div class="flow-box" id="preGcEthOutletBox">
                     <span>PE / direct outlet</span>
                     <b id="preGcEthOutlet">-</b>
                     <small>GC direct PE assets</small>
@@ -986,13 +986,13 @@
               <div class="parent-flow scgc-parent">
                 <div class="parent-flow-title"><span>SCGC before JV</span><span>MOC + ROC + TPE</span></div>
                 <div class="flow-steps">
-                  <div class="flow-box">
+                  <div class="flow-box" id="preScgcEthSupplyBox">
                     <span>Ethylene supply</span>
                     <b id="preScgcEthSupply">-</b>
                     <small>SCGC MOC + ROC</small>
                   </div>
                   <div class="arrow"></div>
-                  <div class="flow-box">
+                  <div class="flow-box" id="preScgcEthOutletBox">
                     <span>PE / direct outlet</span>
                     <b id="preScgcEthOutlet">-</b>
                     <small>Thai Polyethylene PE</small>
@@ -1012,13 +1012,13 @@
               <div class="parent-flow gc-parent">
                 <div class="parent-flow-title"><span>PTTGC before JV</span><span>Olefins + HMC exposure</span></div>
                 <div class="flow-steps">
-                  <div class="flow-box">
+                  <div class="flow-box" id="preGcPropSupplyBox">
                     <span>Propylene supply</span>
                     <b id="preGcPropSupply">-</b>
                     <small>GC olefins platform</small>
                   </div>
                   <div class="arrow"></div>
-                  <div class="flow-box">
+                  <div class="flow-box" id="preGcPropOutletBox">
                     <span>PP / economic outlet</span>
                     <b id="preGcPropOutlet">-</b>
                     <small>HMC Polymers exposure</small>
@@ -1034,13 +1034,13 @@
               <div class="parent-flow scgc-parent">
                 <div class="parent-flow-title"><span>SCGC before JV</span><span>MOC + ROC + PP</span></div>
                 <div class="flow-steps">
-                  <div class="flow-box">
+                  <div class="flow-box" id="preScgcPropSupplyBox">
                     <span>Propylene supply</span>
                     <b id="preScgcPropSupply">-</b>
                     <small>SCGC MOC + ROC</small>
                   </div>
                   <div class="arrow"></div>
-                  <div class="flow-box">
+                  <div class="flow-box" id="preScgcPropOutletBox">
                     <span>PP / direct outlet</span>
                     <b id="preScgcPropOutlet">-</b>
                     <small>Thai Polyethylene PP</small>
@@ -1060,13 +1060,13 @@
               <div class="parent-flow gc-parent">
                 <div class="parent-flow-title"><span>PTTGC before JV</span><span>GC C4 / BD</span></div>
                 <div class="flow-steps">
-                  <div class="flow-box">
+                  <div class="flow-box" id="preGcC4SupplyBox">
                     <span>C4 / BD source</span>
                     <b id="preGcC4Supply">-</b>
                     <small>GC BD / butene</small>
                   </div>
                   <div class="arrow"></div>
-                  <div class="flow-box">
+                  <div class="flow-box" id="preGcC4OutletBox">
                     <span>Derivative outlet</span>
                     <b id="preGcC4Outlet">-</b>
                     <small>Mapped direct C4 sink</small>
@@ -1082,13 +1082,13 @@
               <div class="parent-flow scgc-parent">
                 <div class="parent-flow-title"><span>SCGC before JV</span><span>ICO / derivative option</span></div>
                 <div class="flow-steps">
-                  <div class="flow-box">
+                  <div class="flow-box" id="preScgcC4SupplyBox">
                     <span>C4 / BD source</span>
                     <b id="preScgcC4Supply">-</b>
                     <small>Mapped source in Thai chain</small>
                   </div>
                   <div class="arrow"></div>
-                  <div class="flow-box">
+                  <div class="flow-box" id="preScgcC4OutletBox">
                     <span>Derivative outlet</span>
                     <b id="preScgcC4Outlet">-</b>
                     <small>SCGC ICO / C4 derivatives</small>
@@ -1108,13 +1108,13 @@
               <div class="parent-flow gc-parent">
                 <div class="parent-flow-title"><span>PTTGC before JV</span><span>Aromatics / HVA side option</span></div>
                 <div class="flow-steps">
-                  <div class="flow-box">
+                  <div class="flow-box" id="preGcSideSupplyBox">
                     <span>Side-chain capacity</span>
                     <b id="preGcSideSupply">-</b>
                     <small>Mapped compound / HVA option</small>
                   </div>
                   <div class="arrow"></div>
-                  <div class="flow-box">
+                  <div class="flow-box" id="preGcSideOutletBox">
                     <span>Direct ROC sink?</span>
                     <b id="preGcSideOutlet">No</b>
                     <small>Not direct PE/PP outlet</small>
@@ -1130,13 +1130,13 @@
               <div class="parent-flow scgc-parent">
                 <div class="parent-flow-title"><span>SCGC before JV</span><span>Vinyl / PVC chain</span></div>
                 <div class="flow-steps">
-                  <div class="flow-box">
+                  <div class="flow-box" id="preScgcSideSupplyBox">
                     <span>Side-chain capacity</span>
                     <b id="preScgcSideSupply">-</b>
                     <small>SCGC VCM / vinyl chain</small>
                   </div>
                   <div class="arrow"></div>
-                  <div class="flow-box">
+                  <div class="flow-box" id="preScgcSideOutletBox">
                     <span>Direct ROC sink?</span>
                     <b id="preScgcSideOutlet">No</b>
                     <small>Different molecule chain</small>
@@ -1511,6 +1511,30 @@
         flowSideSupplyBox: ["side-capacity"],
         flowSideOutletBox: ["side-capacity"]
       };
+      const preJvHighlightMap = {
+        preGcEthSupplyBox: { owner: "owner-gc", sources: ["eth-supply"] },
+        preGcEthOutletBox: { owner: "owner-gc", sources: ["eth-outlet"] },
+        preGcEthBalanceBox: { owner: "owner-gc", sources: ["eth-supply", "eth-outlet"] },
+        preScgcEthSupplyBox: { owner: "owner-scgc", sources: ["eth-supply"] },
+        preScgcEthOutletBox: { owner: "owner-scgc", sources: ["eth-outlet"] },
+        preScgcEthBalanceBox: { owner: "owner-scgc", sources: ["eth-supply", "eth-outlet"] },
+        preGcPropSupplyBox: { owner: "owner-gc", sources: ["prop-supply"] },
+        preGcPropOutletBox: { owner: "owner-gc", sources: ["prop-outlet"] },
+        preGcPropBalanceBox: { owner: "owner-gc", sources: ["prop-supply", "prop-outlet"] },
+        preScgcPropSupplyBox: { owner: "owner-scgc", sources: ["prop-supply"] },
+        preScgcPropOutletBox: { owner: "owner-scgc", sources: ["prop-outlet"] },
+        preScgcPropBalanceBox: { owner: "owner-scgc", sources: ["prop-supply", "prop-outlet"] },
+        preGcC4SupplyBox: { owner: "owner-gc", sources: ["c4-supply"] },
+        preGcC4OutletBox: { owner: "owner-gc", sources: ["c4-outlet"] },
+        preGcC4BalanceBox: { owner: "owner-gc", sources: ["c4-supply", "c4-outlet"] },
+        preScgcC4SupplyBox: { owner: "owner-scgc", sources: ["c4-supply"] },
+        preScgcC4OutletBox: { owner: "owner-scgc", sources: ["c4-outlet"] },
+        preScgcC4BalanceBox: { owner: "owner-scgc", sources: ["c4-supply", "c4-outlet"] },
+        preGcSideSupplyBox: { owner: "owner-gc", sources: ["side-capacity"] },
+        preGcSideOutletBox: { owner: "owner-gc", sources: ["side-capacity"] },
+        preScgcSideSupplyBox: { owner: "owner-scgc", sources: ["side-capacity"] },
+        preScgcSideOutletBox: { owner: "owner-scgc", sources: ["side-capacity"] }
+      };
 
       customBoxes.forEach((box, index) => {
         const label = document.createElement("label");
@@ -1530,6 +1554,13 @@
         const flowBox = document.getElementById(flowBoxId);
         if (!flowBox) return;
         flowBox.addEventListener("mouseenter", () => highlightSources(sourceKeys));
+        flowBox.addEventListener("mouseleave", clearSourceHighlights);
+      });
+
+      Object.entries(preJvHighlightMap).forEach(([flowBoxId, config]) => {
+        const flowBox = document.getElementById(flowBoxId);
+        if (!flowBox) return;
+        flowBox.addEventListener("mouseenter", () => highlightOwnerSources(config.sources, config.owner));
         flowBox.addEventListener("mouseleave", clearSourceHighlights);
       });
 
@@ -1579,6 +1610,16 @@
           document.querySelectorAll(`.pill[data-source="${sourceKey}"]`).forEach((pill) => {
             const box = pill.closest(".box");
             if (selected.has(box)) pill.classList.add("source-highlight");
+          });
+        });
+      }
+
+      function highlightOwnerSources(sourceKeys, ownerClass) {
+        clearSourceHighlights();
+        sourceKeys.forEach((sourceKey) => {
+          document.querySelectorAll(`.pill[data-source="${sourceKey}"]`).forEach((pill) => {
+            const box = pill.closest(".box");
+            if (box?.classList.contains(ownerClass)) pill.classList.add("source-highlight");
           });
         });
       }
