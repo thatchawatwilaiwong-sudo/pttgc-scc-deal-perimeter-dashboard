@@ -838,7 +838,7 @@
           <small>GC = 50%; SCGC = 50%; assumes JV is not consolidated back</small>
         </div>
         <div class="debt-kpi leverage-kpi">
-          <span>PTTGC Net IBD/EBITDA</span>
+          <span>PTTGC Net IBD/Adj. EBITDA</span>
           <b id="gcLeverageBefore">Before JV: -</b>
           <small class="leverage-detail" id="gcLeverageBeforeDetail">-</small>
           <b class="leverage-after" id="gcLeverageAfter">After JV: -</b>
@@ -846,7 +846,7 @@
           <small id="gcLeverageNote">Net IBD = IBD - related-party loans - cash and cash equivalents</small>
         </div>
         <div class="debt-kpi leverage-kpi">
-          <span>SCGC Net IBD/EBITDA</span>
+          <span>SCGC Net IBD/Adj. EBITDA</span>
           <b id="scgcLeverageBefore">Before JV: -</b>
           <small class="leverage-detail" id="scgcLeverageBeforeDetail">-</small>
           <b class="leverage-after" id="scgcLeverageAfter">After JV: -</b>
@@ -1488,7 +1488,9 @@
           ibd: 180102,
           relatedBorrowings: 0,
           cash: 18925,
-          ebitda: 18305,
+          ebitda: 20846,
+          ebitdaLabel: "Adj. EBITDA",
+          ebitdaNote: "Adjusted EBITDA excludes stock gain/loss, NRV, commodity hedging gain/loss and extra items",
           relatedBorrowingsNote: "Consolidated related-party borrowings are nil in 2025",
           source: "PTTGC One Report 2025"
         },
@@ -1496,7 +1498,9 @@
           ibd: 193844,
           relatedBorrowings: 76753,
           cash: 2825,
-          ebitda: 4166,
+          ebitda: 11647,
+          ebitdaLabel: "Adj. EBITDA",
+          ebitdaNote: "Adjusted EBITDA excludes LSP performance, inventory valuation gain/loss and special items such as restructuring",
           relatedBorrowingsNote: "Short-term 34,498 + long-term 42,255 THB mn",
           source: "SCGC FY2025 financial statements and MD&A"
         }
@@ -1731,15 +1735,15 @@
         const scgcAfterRatio = scgcAfterEbitda > 0 ? scgcAfterNetIbd / scgcAfterEbitda : NaN;
 
         setText("gcLeverageBefore", `Before JV: ${fmtRatio(gcBeforeRatio)}`);
-        setText("gcLeverageBeforeDetail", `(Net IBD ${fmtAmount(Math.round(gcBeforeNetIbd))} = IBD ${fmtAmount(parentLeverageBase.gc.ibd)} - Related loan ${fmtAmount(parentLeverageBase.gc.relatedBorrowings)} - Cash ${fmtAmount(parentLeverageBase.gc.cash)}; EBITDA ${fmtAmount(parentLeverageBase.gc.ebitda)} THB mn)`);
+        setText("gcLeverageBeforeDetail", `(Net IBD ${fmtAmount(Math.round(gcBeforeNetIbd))} = IBD ${fmtAmount(parentLeverageBase.gc.ibd)} - Related loan ${fmtAmount(parentLeverageBase.gc.relatedBorrowings)} - Cash ${fmtAmount(parentLeverageBase.gc.cash)}; ${parentLeverageBase.gc.ebitdaLabel} ${fmtAmount(parentLeverageBase.gc.ebitda)} THB mn)`);
         setText("gcLeverageAfter", `After JV: ${fmtRatio(gcAfterRatio)}`);
-        setText("gcLeverageAfterDetail", `(Net IBD ${fmtAmount(Math.round(gcAfterNetIbd))} = IBD ${fmtAmount(parentLeverageBase.gc.ibd)} - Related loan ${fmtAmount(parentLeverageBase.gc.relatedBorrowings)} - Debt reduction ${fmtAmount(Math.round(debtReductionEachParent))} - Cash ${fmtAmount(parentLeverageBase.gc.cash)}; EBITDA ${fmtAmount(Math.round(gcAfterEbitda))} THB mn)`);
-        setText("gcLeverageNote", `${parentLeverageBase.gc.relatedBorrowingsNote}. After EBITDA = ${fmtAmount(parentLeverageBase.gc.ebitda)} - ${fmtAmount(summary.ebitdaGc)} transferred + ${fmtAmount(Math.round(jvEbitdaShare))} JV share`);
+        setText("gcLeverageAfterDetail", `(Net IBD ${fmtAmount(Math.round(gcAfterNetIbd))} = IBD ${fmtAmount(parentLeverageBase.gc.ibd)} - Related loan ${fmtAmount(parentLeverageBase.gc.relatedBorrowings)} - Debt reduction ${fmtAmount(Math.round(debtReductionEachParent))} - Cash ${fmtAmount(parentLeverageBase.gc.cash)}; Adj. EBITDA ${fmtAmount(Math.round(gcAfterEbitda))} THB mn)`);
+        setText("gcLeverageNote", `${parentLeverageBase.gc.relatedBorrowingsNote}. After Adj. EBITDA = ${fmtAmount(parentLeverageBase.gc.ebitda)} - ${fmtAmount(summary.ebitdaGc)} transferred + ${fmtAmount(Math.round(jvEbitdaShare))} JV share. * ${parentLeverageBase.gc.ebitdaNote}.`);
         setText("scgcLeverageBefore", `Before JV: ${fmtRatio(scgcBeforeRatio)}`);
-        setText("scgcLeverageBeforeDetail", `(Net IBD ${fmtAmount(Math.round(scgcBeforeNetIbd))} = IBD ${fmtAmount(parentLeverageBase.scgc.ibd)} - Related loan ${fmtAmount(parentLeverageBase.scgc.relatedBorrowings)} - Cash ${fmtAmount(parentLeverageBase.scgc.cash)}; EBITDA ${fmtAmount(parentLeverageBase.scgc.ebitda)} THB mn)`);
+        setText("scgcLeverageBeforeDetail", `(Net IBD ${fmtAmount(Math.round(scgcBeforeNetIbd))} = IBD ${fmtAmount(parentLeverageBase.scgc.ibd)} - Related loan ${fmtAmount(parentLeverageBase.scgc.relatedBorrowings)} - Cash ${fmtAmount(parentLeverageBase.scgc.cash)}; ${parentLeverageBase.scgc.ebitdaLabel} ${fmtAmount(parentLeverageBase.scgc.ebitda)} THB mn)`);
         setText("scgcLeverageAfter", `After JV: ${fmtRatio(scgcAfterRatio)}`);
-        setText("scgcLeverageAfterDetail", `(Net IBD ${fmtAmount(Math.round(scgcAfterNetIbd))} = IBD ${fmtAmount(parentLeverageBase.scgc.ibd)} - Related loan ${fmtAmount(parentLeverageBase.scgc.relatedBorrowings)} - Debt reduction ${fmtAmount(Math.round(debtReductionEachParent))} - Cash ${fmtAmount(parentLeverageBase.scgc.cash)}; EBITDA ${fmtAmount(Math.round(scgcAfterEbitda))} THB mn)`);
-        setText("scgcLeverageNote", `${parentLeverageBase.scgc.relatedBorrowingsNote}. After EBITDA = ${fmtAmount(parentLeverageBase.scgc.ebitda)} - ${fmtAmount(summary.ebitdaScgc)} transferred + ${fmtAmount(Math.round(jvEbitdaShare))} JV share`);
+        setText("scgcLeverageAfterDetail", `(Net IBD ${fmtAmount(Math.round(scgcAfterNetIbd))} = IBD ${fmtAmount(parentLeverageBase.scgc.ibd)} - Related loan ${fmtAmount(parentLeverageBase.scgc.relatedBorrowings)} - Debt reduction ${fmtAmount(Math.round(debtReductionEachParent))} - Cash ${fmtAmount(parentLeverageBase.scgc.cash)}; Adj. EBITDA ${fmtAmount(Math.round(scgcAfterEbitda))} THB mn)`);
+        setText("scgcLeverageNote", `${parentLeverageBase.scgc.relatedBorrowingsNote}. After Adj. EBITDA = ${fmtAmount(parentLeverageBase.scgc.ebitda)} - ${fmtAmount(summary.ebitdaScgc)} transferred + ${fmtAmount(Math.round(jvEbitdaShare))} JV share. * ${parentLeverageBase.scgc.ebitdaNote}.`);
       }
 
       function updateFlowView(key, summary) {
