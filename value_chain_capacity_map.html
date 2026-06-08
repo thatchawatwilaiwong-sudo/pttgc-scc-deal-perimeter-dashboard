@@ -125,7 +125,7 @@
 
       .debt-calculator {
         display: grid;
-        grid-template-columns: 260px repeat(6, minmax(130px, 1fr));
+        grid-template-columns: 150px minmax(250px, 1.45fr) minmax(250px, 1.45fr) repeat(3, minmax(120px, .85fr)) repeat(2, minmax(155px, 1fr));
         gap: 10px;
         align-items: stretch;
         padding: 14px 18px;
@@ -163,6 +163,47 @@
 
       .debt-input .input-row + .input-row {
         margin-top: 9px;
+      }
+
+      .top-stack-kpi {
+        padding: 9px;
+      }
+
+      .top-stack-kpi .stack-panel {
+        padding: 0;
+        border: 0;
+        background: transparent;
+      }
+
+      .top-stack-kpi .stack-head {
+        margin-bottom: 7px;
+      }
+
+      .top-stack-kpi .stack-head strong {
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 900;
+      }
+
+      .top-stack-kpi .stack-head span,
+      .top-stack-kpi .value-row span {
+        display: inline;
+        margin: 0;
+        font-size: 10px;
+        font-weight: 800;
+      }
+
+      .top-stack-kpi .stack-bar {
+        height: 30px;
+      }
+
+      .top-stack-kpi .stack-values {
+        margin-top: 7px;
+        gap: 4px;
+      }
+
+      .top-stack-kpi .value-row b {
+        font-size: 11px;
       }
 
       .debt-kpi b {
@@ -837,10 +878,37 @@
             <input id="ibdEbitdaRatio" type="number" value="4" min="0" step="0.1" />
           </div>
         </div>
-        <div class="debt-kpi">
-          <span>JV asset size base</span>
-          <b id="deAssetBase">-</b>
-          <small>Asset value transferred into JV by selected scenario</small>
+        <div class="debt-kpi top-stack-kpi">
+          <div class="stack-panel">
+            <div class="stack-head">
+              <strong>JV asset size base</strong>
+              <span id="topAssetTotal">-</span>
+            </div>
+            <div class="stack-bar" aria-label="Top asset size split">
+              <div class="seg gc-seg" id="topAssetGcBar">-</div>
+              <div class="seg scgc-seg" id="topAssetScgcBar">-</div>
+            </div>
+            <div class="stack-values">
+              <div class="value-row"><span>PTTGC / GC</span><b id="topAssetGcValue">-</b></div>
+              <div class="value-row"><span>SCGC</span><b id="topAssetScgcValue">-</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="debt-kpi top-stack-kpi">
+          <div class="stack-panel">
+            <div class="stack-head">
+              <strong>JV EBITDA</strong>
+              <span id="topEbitdaTotal">-</span>
+            </div>
+            <div class="stack-bar" aria-label="Top EBITDA split">
+              <div class="seg gc-seg" id="topEbitdaGcBar">-</div>
+              <div class="seg scgc-seg" id="topEbitdaScgcBar">-</div>
+            </div>
+            <div class="stack-values">
+              <div class="value-row"><span>PTTGC / GC</span><b id="topEbitdaGcValue">-</b></div>
+              <div class="value-row"><span>SCGC</span><b id="topEbitdaScgcValue">-</b></div>
+            </div>
+          </div>
         </div>
         <div class="debt-kpi">
           <span>Max JV debt capacity</span>
@@ -1732,7 +1800,8 @@
         const debt = assetBase ? Math.min(deDebt, ibdDebt) : 0;
         const equity = assetBase ? assetBase - debt : 0;
         const gcReduction = debt * 0.5;
-        setText("deAssetBase", assetBase ? `${fmt(Math.round(assetBase))} THB mn` : "-");
+        updateStack("topAsset", summary.assetGc, summary.assetScgc);
+        updateStack("topEbitda", summary.ebitdaGc, summary.ebitdaScgc);
         setText("deDebtCapacity", debt ? `${fmt(Math.round(debt))} THB mn` : "-");
         setText("deEquity", equity ? `${fmt(Math.round(equity))} THB mn` : "-");
         setText("deGcReduction", gcReduction ? `${fmt(Math.round(gcReduction))} THB mn` : "-");
