@@ -184,13 +184,20 @@
         line-height: 1.25;
       }
 
-      .leverage-kpi b + b {
+      .leverage-kpi .leverage-after {
         margin-top: 6px;
         color: var(--jv);
       }
 
       .leverage-kpi small {
         font-size: 10px;
+      }
+
+      .leverage-kpi .leverage-detail {
+        margin-top: 2px;
+        font-size: 9px;
+        font-weight: 500;
+        color: #64748b;
       }
 
       .flow-view {
@@ -706,16 +713,20 @@
           <small>GC = 50%; SCGC = 50%; assumes JV is not consolidated back</small>
         </div>
         <div class="debt-kpi leverage-kpi">
-          <span>PTTGC IBD/EBITDA</span>
+          <span>PTTGC Net IBD/EBITDA</span>
           <b id="gcLeverageBefore">Before JV: -</b>
-          <b id="gcLeverageAfter">After JV: -</b>
-          <small id="gcLeverageNote">After = lower IBD from debt reduction, less transferred EBITDA, plus 50% JV EBITDA share</small>
+          <small class="leverage-detail" id="gcLeverageBeforeDetail">-</small>
+          <b class="leverage-after" id="gcLeverageAfter">After JV: -</b>
+          <small class="leverage-detail" id="gcLeverageAfterDetail">-</small>
+          <small id="gcLeverageNote">Net IBD = IBD - cash and cash equivalents</small>
         </div>
         <div class="debt-kpi leverage-kpi">
-          <span>SCGC IBD/EBITDA</span>
+          <span>SCGC Net IBD/EBITDA</span>
           <b id="scgcLeverageBefore">Before JV: -</b>
-          <b id="scgcLeverageAfter">After JV: -</b>
-          <small id="scgcLeverageNote">After = lower IBD from debt reduction, less transferred EBITDA, plus 50% JV EBITDA share</small>
+          <small class="leverage-detail" id="scgcLeverageBeforeDetail">-</small>
+          <b class="leverage-after" id="scgcLeverageAfter">After JV: -</b>
+          <small class="leverage-detail" id="scgcLeverageAfterDetail">-</small>
+          <small id="scgcLeverageNote">Net IBD = IBD - cash and cash equivalents</small>
         </div>
       </section>
 
@@ -1154,11 +1165,13 @@
       const parentLeverageBase = {
         gc: {
           ibd: 180102,
+          cash: 18925,
           ebitda: 18305,
           source: "PTTGC One Report 2025"
         },
         scgc: {
           ibd: 193844,
+          cash: 2825,
           ebitda: 4166,
           source: "SCGC FY2025 financial statements and MD&A"
         }
@@ -1330,18 +1343,26 @@
         const jvEbitdaShare = jvEbitda * 0.5;
         const gcAfterIbd = Math.max(parentLeverageBase.gc.ibd - debtReductionEachParent, 0);
         const scgcAfterIbd = Math.max(parentLeverageBase.scgc.ibd - debtReductionEachParent, 0);
+        const gcBeforeNetIbd = Math.max(parentLeverageBase.gc.ibd - parentLeverageBase.gc.cash, 0);
+        const scgcBeforeNetIbd = Math.max(parentLeverageBase.scgc.ibd - parentLeverageBase.scgc.cash, 0);
+        const gcAfterNetIbd = Math.max(gcAfterIbd - parentLeverageBase.gc.cash, 0);
+        const scgcAfterNetIbd = Math.max(scgcAfterIbd - parentLeverageBase.scgc.cash, 0);
         const gcAfterEbitda = parentLeverageBase.gc.ebitda - summary.ebitdaGc + jvEbitdaShare;
         const scgcAfterEbitda = parentLeverageBase.scgc.ebitda - summary.ebitdaScgc + jvEbitdaShare;
-        const gcBeforeRatio = parentLeverageBase.gc.ibd / parentLeverageBase.gc.ebitda;
-        const scgcBeforeRatio = parentLeverageBase.scgc.ibd / parentLeverageBase.scgc.ebitda;
-        const gcAfterRatio = gcAfterEbitda > 0 ? gcAfterIbd / gcAfterEbitda : NaN;
-        const scgcAfterRatio = scgcAfterEbitda > 0 ? scgcAfterIbd / scgcAfterEbitda : NaN;
+        const gcBeforeRatio = gcBeforeNetIbd / parentLeverageBase.gc.ebitda;
+        const scgcBeforeRatio = scgcBeforeNetIbd / parentLeverageBase.scgc.ebitda;
+        const gcAfterRatio = gcAfterEbitda > 0 ? gcAfterNetIbd / gcAfterEbitda : NaN;
+        const scgcAfterRatio = scgcAfterEbitda > 0 ? scgcAfterNetIbd / scgcAfterEbitda : NaN;
 
-        setText("gcLeverageBefore", `Before JV: ${fmtRatio(gcBeforeRatio)} (IBD ${fmtAmount(parentLeverageBase.gc.ibd)}; EBITDA ${fmtAmount(parentLeverageBase.gc.ebitda)} THB mn)`);
-        setText("gcLeverageAfter", `After JV: ${fmtRatio(gcAfterRatio)} (IBD ${fmtAmount(Math.round(gcAfterIbd))}; EBITDA ${fmtAmount(Math.round(gcAfterEbitda))} THB mn)`);
+        setText("gcLeverageBefore", `Before JV: ${fmtRatio(gcBeforeRatio)}`);
+        setText("gcLeverageBeforeDetail", `(Net IBD ${fmtAmount(Math.round(gcBeforeNetIbd))} = IBD ${fmtAmount(parentLeverageBase.gc.ibd)} - Cash ${fmtAmount(parentLeverageBase.gc.cash)}; EBITDA ${fmtAmount(parentLeverageBase.gc.ebitda)} THB mn)`);
+        setText("gcLeverageAfter", `After JV: ${fmtRatio(gcAfterRatio)}`);
+        setText("gcLeverageAfterDetail", `(Net IBD ${fmtAmount(Math.round(gcAfterNetIbd))} = IBD ${fmtAmount(Math.round(gcAfterIbd))} - Cash ${fmtAmount(parentLeverageBase.gc.cash)}; EBITDA ${fmtAmount(Math.round(gcAfterEbitda))} THB mn)`);
         setText("gcLeverageNote", `After EBITDA = ${fmtAmount(parentLeverageBase.gc.ebitda)} - ${fmtAmount(summary.ebitdaGc)} transferred + ${fmtAmount(Math.round(jvEbitdaShare))} JV share`);
-        setText("scgcLeverageBefore", `Before JV: ${fmtRatio(scgcBeforeRatio)} (IBD ${fmtAmount(parentLeverageBase.scgc.ibd)}; EBITDA ${fmtAmount(parentLeverageBase.scgc.ebitda)} THB mn)`);
-        setText("scgcLeverageAfter", `After JV: ${fmtRatio(scgcAfterRatio)} (IBD ${fmtAmount(Math.round(scgcAfterIbd))}; EBITDA ${fmtAmount(Math.round(scgcAfterEbitda))} THB mn)`);
+        setText("scgcLeverageBefore", `Before JV: ${fmtRatio(scgcBeforeRatio)}`);
+        setText("scgcLeverageBeforeDetail", `(Net IBD ${fmtAmount(Math.round(scgcBeforeNetIbd))} = IBD ${fmtAmount(parentLeverageBase.scgc.ibd)} - Cash ${fmtAmount(parentLeverageBase.scgc.cash)}; EBITDA ${fmtAmount(parentLeverageBase.scgc.ebitda)} THB mn)`);
+        setText("scgcLeverageAfter", `After JV: ${fmtRatio(scgcAfterRatio)}`);
+        setText("scgcLeverageAfterDetail", `(Net IBD ${fmtAmount(Math.round(scgcAfterNetIbd))} = IBD ${fmtAmount(Math.round(scgcAfterIbd))} - Cash ${fmtAmount(parentLeverageBase.scgc.cash)}; EBITDA ${fmtAmount(Math.round(scgcAfterEbitda))} THB mn)`);
         setText("scgcLeverageNote", `After EBITDA = ${fmtAmount(parentLeverageBase.scgc.ebitda)} - ${fmtAmount(summary.ebitdaScgc)} transferred + ${fmtAmount(Math.round(jvEbitdaShare))} JV share`);
       }
 
