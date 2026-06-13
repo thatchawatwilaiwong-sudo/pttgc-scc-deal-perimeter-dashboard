@@ -417,10 +417,41 @@
         color: #cbd5e1;
       }
 
-      .decision-lab-head strong {
+      .decision-lab-actions {
+        display: flex;
         flex: 0 0 auto;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .decision-lab-actions strong {
         font-size: 11px;
         color: #ddd6fe;
+      }
+
+      .decision-toggle {
+        display: inline-grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        border: 1px solid #64748b;
+        border-radius: 6px;
+        background: #1e293b;
+        color: #fff;
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      .decision-toggle:hover {
+        border-color: #c4b5fd;
+        background: #4c1d95;
+      }
+
+      .capacity-decision-lab.is-collapsed .decision-grid,
+      .capacity-decision-lab.is-collapsed .decision-method {
+        display: none;
       }
 
       .decision-grid {
@@ -1391,56 +1422,61 @@
               <h3>Excess Capacity Decision Lab</h3>
               <p>แปลง unallocated capacity ของ scenario ที่เลือกเป็น commercial decision โดยใช้ 2025 Asia market spread จาก PTTGC Form 56-1 และ operating context จาก SCGC/SCC Form 56-1 เป็น benchmark ไม่ใช่ plant-level EBITDA forecast</p>
             </div>
-            <strong id="decisionScenarioLabel">-</strong>
+            <div class="decision-lab-actions">
+              <strong id="decisionScenarioLabel">-</strong>
+              <button class="decision-toggle" id="decisionLabToggle" type="button" aria-expanded="true" aria-controls="decisionLabContent" title="ย่อส่วนวิเคราะห์">−</button>
+            </div>
           </div>
-          <div class="decision-grid">
-            <article class="decision-card">
-              <header><span>Ethylene chain</span><b id="decisionEthVolume">-</b></header>
-              <div class="decision-body">
-                <div class="margin-row"><span>Merchant Ethylene-Naphtha</span><b>USD 242/t</b></div>
-                <div class="margin-row"><span>HDPE / LLDPE / LDPE conversion</span><b>USD 89 / 108 / 282/t</b></div>
-                <div class="decision-row"><span>Gross spread proxy</span><b id="decisionEthValue">-</b></div>
-                <div class="decision-action" id="decisionEthAction">-</div>
-                <small>Build gate: contracted demand + mid-cycle conversion margin above full cash cost, maintenance capex and required return. LDPE has the strongest 2025 conversion spread; HDPE/LLDPE remain thin.</small>
-              </div>
-            </article>
+          <div id="decisionLabContent">
+            <div class="decision-grid">
+              <article class="decision-card">
+                <header><span>Ethylene chain</span><b id="decisionEthVolume">-</b></header>
+                <div class="decision-body">
+                  <div class="margin-row"><span>Merchant Ethylene-Naphtha</span><b>USD 242/t</b></div>
+                  <div class="margin-row"><span>HDPE / LLDPE / LDPE conversion</span><b>USD 89 / 108 / 282/t</b></div>
+                  <div class="decision-row"><span>Gross spread proxy</span><b id="decisionEthValue">-</b></div>
+                  <div class="decision-action" id="decisionEthAction">-</div>
+                  <small>Build gate: contracted demand + mid-cycle conversion margin above full cash cost, maintenance capex and required return. LDPE has the strongest 2025 conversion spread; HDPE/LLDPE remain thin.</small>
+                </div>
+              </article>
 
-            <article class="decision-card">
-              <header><span>Propylene chain</span><b id="decisionPropVolume">-</b></header>
-              <div class="decision-body">
-                <div class="margin-row"><span>Merchant Propylene-Naphtha</span><b>USD 198/t</b></div>
-                <div class="margin-row"><span>Implied PP-Propylene conversion</span><b>~USD 112/t</b></div>
-                <div class="decision-row"><span>Gross spread proxy</span><b id="decisionPropValue">-</b></div>
-                <div class="decision-action" id="decisionPropAction">-</div>
-                <small>PP conversion proxy = PP-Naphtha USD 310/t less Propylene-Naphtha USD 198/t. It is directional because benchmark timing, grade and yield bases differ.</small>
-              </div>
-            </article>
+              <article class="decision-card">
+                <header><span>Propylene chain</span><b id="decisionPropVolume">-</b></header>
+                <div class="decision-body">
+                  <div class="margin-row"><span>Merchant Propylene-Naphtha</span><b>USD 198/t</b></div>
+                  <div class="margin-row"><span>Implied PP-Propylene conversion</span><b>~USD 112/t</b></div>
+                  <div class="decision-row"><span>Gross spread proxy</span><b id="decisionPropValue">-</b></div>
+                  <div class="decision-action" id="decisionPropAction">-</div>
+                  <small>PP conversion proxy = PP-Naphtha USD 310/t less Propylene-Naphtha USD 198/t. It is directional because benchmark timing, grade and yield bases differ.</small>
+                </div>
+              </article>
 
-            <article class="decision-card">
-              <header><span>C4 / Butadiene chain</span><b id="decisionC4Volume">-</b></header>
-              <div class="decision-body">
-                <div class="margin-row"><span>Public 2025 C4/BD spread</span><b>Not disclosed</b></div>
-                <div class="margin-row"><span>Mapped derivative outlet</span><b>SCGC ICO 85 KTA</b></div>
-                <div class="decision-row"><span>Economics basis</span><b>Netback / tolling quote</b></div>
-                <div class="decision-action" id="decisionC4Action">-</div>
-                <small>Require actual mixed-C4 composition, BD extraction yield, butene-1 internal value and merchant contract netback. Do not approve greenfield capex from nameplate balance alone.</small>
-              </div>
-            </article>
+              <article class="decision-card">
+                <header><span>C4 / Butadiene chain</span><b id="decisionC4Volume">-</b></header>
+                <div class="decision-body">
+                  <div class="margin-row"><span>Public 2025 C4/BD spread</span><b>Not disclosed</b></div>
+                  <div class="margin-row"><span>Mapped derivative outlet</span><b>SCGC ICO 85 KTA</b></div>
+                  <div class="decision-row"><span>Economics basis</span><b>Netback / tolling quote</b></div>
+                  <div class="decision-action" id="decisionC4Action">-</div>
+                  <small>Require actual mixed-C4 composition, BD extraction yield, butene-1 internal value and merchant contract netback. Do not approve greenfield capex from nameplate balance alone.</small>
+                </div>
+              </article>
 
-            <article class="decision-card">
-              <header><span>Vinyl / Aromatics side chain</span><b id="decisionSideVolume">-</b></header>
-              <div class="decision-body">
-                <div class="margin-row"><span>PVC - 0.5 Ethylene</span><b>USD 245/t</b></div>
-                <div class="margin-row"><span>PX / Benzene - Naphtha</span><b>USD 230 / 152/t</b></div>
-                <div class="decision-row"><span>Direct ROC monomer sink?</span><b>No</b></div>
-                <div class="decision-action" id="decisionSideAction">-</div>
-                <small>PVC also needs EDC/chlorine/VCM integration; aromatics are a different molecule chain. Evaluate as separate sidecar assets, not as automatic absorption of ethylene/propylene surplus.</small>
-              </div>
-            </article>
-          </div>
-          <div class="decision-method">
-            <p><b>Recommended hierarchy:</b> 1) validate actual available tons, 2) fill idle existing downstream capacity, 3) optimize grade wheel and intercompany/tolling flows, 4) secure merchant/export offtake, 5) debottleneck, and only then 6) consider a new plant.</p>
-            <p><b>2025 operating evidence:</b> PTTGC olefins utilization 81%; SCGC Thailand olefins approximately 90%, polyolefins 78%, PVC 94%. SCGC disclosed 1,865 KTA of olefins supplied under purchase agreements and remaining output sold to JVs/external shareholder customers. Sources: PTTGC Form 56-1 One Report 2025 pp. 74-79 and 124-129; SCC Form 56-1 One Report 2025 pp. 77-93.</p>
+              <article class="decision-card">
+                <header><span>Vinyl / Aromatics side chain</span><b id="decisionSideVolume">-</b></header>
+                <div class="decision-body">
+                  <div class="margin-row"><span>PVC - 0.5 Ethylene</span><b>USD 245/t</b></div>
+                  <div class="margin-row"><span>PX / Benzene - Naphtha</span><b>USD 230 / 152/t</b></div>
+                  <div class="decision-row"><span>Direct ROC monomer sink?</span><b>No</b></div>
+                  <div class="decision-action" id="decisionSideAction">-</div>
+                  <small>PVC also needs EDC/chlorine/VCM integration; aromatics are a different molecule chain. Evaluate as separate sidecar assets, not as automatic absorption of ethylene/propylene surplus.</small>
+                </div>
+              </article>
+            </div>
+            <div class="decision-method">
+              <p><b>Recommended hierarchy:</b> 1) validate actual available tons, 2) fill idle existing downstream capacity, 3) optimize grade wheel and intercompany/tolling flows, 4) secure merchant/export offtake, 5) debottleneck, and only then 6) consider a new plant.</p>
+              <p><b>2025 operating evidence:</b> PTTGC olefins utilization 81%; SCGC Thailand olefins approximately 90%, polyolefins 78%, PVC 94%. SCGC disclosed 1,865 KTA of olefins supplied under purchase agreements and remaining output sold to JVs/external shareholder customers. Sources: PTTGC Form 56-1 One Report 2025 pp. 74-79 and 124-129; SCC Form 56-1 One Report 2025 pp. 77-93.</p>
+            </div>
           </div>
         </section>
       </section>
@@ -1771,6 +1807,8 @@
       const logicList = document.getElementById("logicList");
       const deRatio = document.getElementById("deRatio");
       const ibdEbitdaRatio = document.getElementById("ibdEbitdaRatio");
+      const decisionLab = document.querySelector(".capacity-decision-lab");
+      const decisionLabToggle = document.getElementById("decisionLabToggle");
       const parentLeverageBase = {
         gc: {
           ibd: 180102,
@@ -1860,6 +1898,13 @@
         if (!flowBox) return;
         flowBox.addEventListener("mouseenter", () => highlightOwnerSources(config.sources, config.owner));
         flowBox.addEventListener("mouseleave", clearSourceHighlights);
+      });
+
+      decisionLabToggle.addEventListener("click", () => {
+        const collapsed = decisionLab.classList.toggle("is-collapsed");
+        decisionLabToggle.textContent = collapsed ? "+" : "−";
+        decisionLabToggle.setAttribute("aria-expanded", String(!collapsed));
+        decisionLabToggle.title = collapsed ? "ขยายส่วนวิเคราะห์" : "ย่อส่วนวิเคราะห์";
       });
 
       function fmt(n) {
