@@ -386,6 +386,142 @@
         line-height: 1.4;
       }
 
+      .capacity-decision-lab {
+        margin-top: 12px;
+        border: 1px solid #d7deea;
+        border-radius: 10px;
+        background: #f8fafc;
+        overflow: hidden;
+      }
+
+      .decision-lab-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: flex-start;
+        padding: 12px 14px;
+        background: #0f172a;
+        color: #fff;
+      }
+
+      .decision-lab-head h3 {
+        margin: 0 0 4px;
+        font-size: 14px;
+      }
+
+      .decision-lab-head p {
+        margin: 0;
+        max-width: 900px;
+        font-size: 10px;
+        line-height: 1.4;
+        color: #cbd5e1;
+      }
+
+      .decision-lab-head strong {
+        flex: 0 0 auto;
+        font-size: 11px;
+        color: #ddd6fe;
+      }
+
+      .decision-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        padding: 10px;
+      }
+
+      .decision-card {
+        border: 1px solid #d7deea;
+        border-radius: 8px;
+        background: #fff;
+        overflow: hidden;
+      }
+
+      .decision-card header {
+        padding: 9px 10px;
+        border-bottom: 1px solid #e2e8f0;
+        background: #eef2f7;
+      }
+
+      .decision-card header span {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 9px;
+        font-weight: 900;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      .decision-card header b {
+        display: block;
+        font-size: 15px;
+        color: var(--ink);
+      }
+
+      .decision-body {
+        padding: 10px;
+      }
+
+      .margin-row,
+      .decision-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 5px 0;
+        border-bottom: 1px dashed #e2e8f0;
+        font-size: 10px;
+        line-height: 1.3;
+      }
+
+      .margin-row span,
+      .decision-row span {
+        color: var(--muted);
+      }
+
+      .margin-row b,
+      .decision-row b {
+        text-align: right;
+        color: var(--ink);
+      }
+
+      .decision-action {
+        margin: 9px 0 5px;
+        padding: 8px;
+        border-left: 4px solid var(--jv);
+        background: #f5f3ff;
+        font-size: 11px;
+        font-weight: 900;
+        line-height: 1.35;
+        color: #4c1d95;
+      }
+
+      .decision-card small {
+        display: block;
+        font-size: 9px;
+        line-height: 1.4;
+        color: var(--muted);
+      }
+
+      .decision-method {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 12px;
+        padding: 10px 14px 13px;
+        border-top: 1px solid #d7deea;
+        background: #fff;
+      }
+
+      .decision-method p {
+        margin: 0;
+        font-size: 10px;
+        line-height: 1.45;
+        color: var(--muted);
+      }
+
+      .decision-method b {
+        color: var(--ink);
+      }
+
       .pre-jv-chain {
         margin-top: 10px;
         border: 1px solid #d7deea;
@@ -812,6 +948,8 @@
         .toolbar,
         .debt-calculator,
         .flow-grid,
+        .decision-grid,
+        .decision-method,
         .pre-jv-grid,
         .bottom {
           grid-template-columns: 1fr;
@@ -971,9 +1109,9 @@
               </div>
               <div class="arrow"></div>
               <div class="flow-box" id="flowEthBalanceBox">
-                <span>Excess / shortfall</span>
+                <span>Unallocated / shortfall</span>
                 <b id="flowEthBalance">-</b>
-                <small id="flowEthBalanceNote">Positive = surplus monomer to sell/balance</small>
+                <small id="flowEthBalanceNote">Positive = not absorbed by PE assets shown in this perimeter</small>
               </div>
             </div>
           </article>
@@ -994,7 +1132,7 @@
               </div>
               <div class="arrow"></div>
               <div class="flow-box" id="flowPropBalanceBox">
-                <span>Excess / shortfall</span>
+                <span>Unallocated / shortfall</span>
                 <b id="flowPropBalance">-</b>
                 <small>PTTGC has other propylene outlets not fully mapped here</small>
               </div>
@@ -1244,8 +1382,67 @@
           </div>
         </details>
         <div class="flow-note">
-          Current limitation: these balances are nameplate-capacity proxies, not operating utilization. Feedstock contracts, cracker yield, grade slate, shutdown status and merchant/offtake contracts must be verified before concluding true excess capacity.
+          Current limitation: positive balances are unallocated nameplate-capacity proxies, not proven saleable excess. The map excludes some internal derivatives, shareholder/JV offtake and merchant contracts. Feedstock yield, actual utilization, maintenance, grade slate and contract commitments must be verified before an investment decision.
         </div>
+
+        <section class="capacity-decision-lab">
+          <div class="decision-lab-head">
+            <div>
+              <h3>Excess Capacity Decision Lab</h3>
+              <p>แปลง unallocated capacity ของ scenario ที่เลือกเป็น commercial decision โดยใช้ 2025 Asia market spread จาก PTTGC Form 56-1 และ operating context จาก SCGC/SCC Form 56-1 เป็น benchmark ไม่ใช่ plant-level EBITDA forecast</p>
+            </div>
+            <strong id="decisionScenarioLabel">-</strong>
+          </div>
+          <div class="decision-grid">
+            <article class="decision-card">
+              <header><span>Ethylene chain</span><b id="decisionEthVolume">-</b></header>
+              <div class="decision-body">
+                <div class="margin-row"><span>Merchant Ethylene-Naphtha</span><b>USD 242/t</b></div>
+                <div class="margin-row"><span>HDPE / LLDPE / LDPE conversion</span><b>USD 89 / 108 / 282/t</b></div>
+                <div class="decision-row"><span>Gross spread proxy</span><b id="decisionEthValue">-</b></div>
+                <div class="decision-action" id="decisionEthAction">-</div>
+                <small>Build gate: contracted demand + mid-cycle conversion margin above full cash cost, maintenance capex and required return. LDPE has the strongest 2025 conversion spread; HDPE/LLDPE remain thin.</small>
+              </div>
+            </article>
+
+            <article class="decision-card">
+              <header><span>Propylene chain</span><b id="decisionPropVolume">-</b></header>
+              <div class="decision-body">
+                <div class="margin-row"><span>Merchant Propylene-Naphtha</span><b>USD 198/t</b></div>
+                <div class="margin-row"><span>Implied PP-Propylene conversion</span><b>~USD 112/t</b></div>
+                <div class="decision-row"><span>Gross spread proxy</span><b id="decisionPropValue">-</b></div>
+                <div class="decision-action" id="decisionPropAction">-</div>
+                <small>PP conversion proxy = PP-Naphtha USD 310/t less Propylene-Naphtha USD 198/t. It is directional because benchmark timing, grade and yield bases differ.</small>
+              </div>
+            </article>
+
+            <article class="decision-card">
+              <header><span>C4 / Butadiene chain</span><b id="decisionC4Volume">-</b></header>
+              <div class="decision-body">
+                <div class="margin-row"><span>Public 2025 C4/BD spread</span><b>Not disclosed</b></div>
+                <div class="margin-row"><span>Mapped derivative outlet</span><b>SCGC ICO 85 KTA</b></div>
+                <div class="decision-row"><span>Economics basis</span><b>Netback / tolling quote</b></div>
+                <div class="decision-action" id="decisionC4Action">-</div>
+                <small>Require actual mixed-C4 composition, BD extraction yield, butene-1 internal value and merchant contract netback. Do not approve greenfield capex from nameplate balance alone.</small>
+              </div>
+            </article>
+
+            <article class="decision-card">
+              <header><span>Vinyl / Aromatics side chain</span><b id="decisionSideVolume">-</b></header>
+              <div class="decision-body">
+                <div class="margin-row"><span>PVC - 0.5 Ethylene</span><b>USD 245/t</b></div>
+                <div class="margin-row"><span>PX / Benzene - Naphtha</span><b>USD 230 / 152/t</b></div>
+                <div class="decision-row"><span>Direct ROC monomer sink?</span><b>No</b></div>
+                <div class="decision-action" id="decisionSideAction">-</div>
+                <small>PVC also needs EDC/chlorine/VCM integration; aromatics are a different molecule chain. Evaluate as separate sidecar assets, not as automatic absorption of ethylene/propylene surplus.</small>
+              </div>
+            </article>
+          </div>
+          <div class="decision-method">
+            <p><b>Recommended hierarchy:</b> 1) validate actual available tons, 2) fill idle existing downstream capacity, 3) optimize grade wheel and intercompany/tolling flows, 4) secure merchant/export offtake, 5) debottleneck, and only then 6) consider a new plant.</p>
+            <p><b>2025 operating evidence:</b> PTTGC olefins utilization 81%; SCGC Thailand olefins approximately 90%, polyolefins 78%, PVC 94%. SCGC disclosed 1,865 KTA of olefins supplied under purchase agreements and remaining output sold to JVs/external shareholder customers. Sources: PTTGC Form 56-1 One Report 2025 pp. 74-79 and 124-129; SCC Form 56-1 One Report 2025 pp. 77-93.</p>
+          </div>
+        </section>
       </section>
 
       <section class="value-chain">
@@ -1759,6 +1956,48 @@
         return `${n > 0 ? "+" : ""}${fmt(Math.round(n))} KTA`;
       }
 
+      function fmtSpreadPool(volumeKta, spreadUsdPerTon) {
+        if (!(volumeKta > 0)) return "-";
+        const usdMillion = volumeKta * spreadUsdPerTon / 1000;
+        return `USD ${usdMillion.toFixed(0)} mn/yr`;
+      }
+
+      function capacityAction(chain, balance) {
+        if (!(balance > 0)) {
+          return "ไม่มี unallocated capacity ใน map นี้: เน้น secure feedstock, reliability และซื้อ/แลก molecule เมื่อเกิด shortfall";
+        }
+        if (chain === "ethylene") {
+          return balance > 500
+            ? "ใช้ existing PE capacity และ offtake ก่อน; ศึกษา LDPE/HVA debottleneck เป็นอันดับถัดไป แต่ยังไม่ควรสร้าง commodity HDPE/LLDPE greenfield"
+            : "จัดสรรเข้า PE line ที่มี margin สูงสุดหรือ merchant sale; ใช้ debottleneck ขนาดเล็กแทน greenfield";
+        }
+        if (chain === "propylene") {
+          return balance > 500
+            ? "เร่งใช้ HMC/SCGC PP, PO และ contractual outlets; merchant sale/tolling เหมาะกว่าสร้าง PP ใหม่ในช่วง spread บาง"
+            : "balance ผ่าน existing PP/HMC และ merchant contracts; greenfield PP ต้องรอ mid-cycle spread และ committed demand";
+        }
+        if (chain === "c4") {
+          return balance <= 50
+            ? "ปริมาณเล็ก: ใช้ ICO, tolling หรือ merchant sale; ไม่รองรับ standalone greenfield economics"
+            : "ทำ C4 slate study และ secure BD/butene-1 offtake ก่อนพิจารณา debottleneck";
+        }
+        return "ประเมินเป็น sidecar แยก: รักษา asset ที่ margin/market แข็งแรง แต่ห้ามนับเป็น direct outlet ของ ROC โดยอัตโนมัติ";
+      }
+
+      function updateCapacityDecisionLab(summary, ethBalance, propBalance, c4Balance, sideCapacity) {
+        setText("decisionScenarioLabel", summary.name);
+        setText("decisionEthVolume", fmtBalance(ethBalance));
+        setText("decisionPropVolume", fmtBalance(propBalance));
+        setText("decisionC4Volume", fmtBalance(c4Balance));
+        setText("decisionSideVolume", fmtKta(sideCapacity));
+        setText("decisionEthValue", fmtSpreadPool(Math.max(ethBalance, 0), 242));
+        setText("decisionPropValue", fmtSpreadPool(Math.max(propBalance, 0), 198));
+        setText("decisionEthAction", capacityAction("ethylene", ethBalance));
+        setText("decisionPropAction", capacityAction("propylene", propBalance));
+        setText("decisionC4Action", capacityAction("c4", c4Balance));
+        setText("decisionSideAction", sideCapacity ? capacityAction("side", sideCapacity) : "ไม่มี side-chain asset ใน scenario นี้");
+      }
+
       function updateStack(prefix, gcValue, scgcValue) {
         const total = gcValue + scgcValue;
         const gcPct = total ? (gcValue / total) * 100 : 0;
@@ -1869,7 +2108,7 @@
         setBalanceClass("flowEthBalanceBox", ethBalance);
         setBalanceClass("flowPropBalanceBox", propBalance);
         setBalanceClass("flowC4BalanceBox", c4Balance);
-
+        updateCapacityDecisionLab(summary, ethBalance, propBalance, c4Balance, sideCapacity);
       }
 
       function updatePreJvFlowView() {
